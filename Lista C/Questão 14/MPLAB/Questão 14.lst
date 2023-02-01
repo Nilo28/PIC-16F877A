@@ -1,0 +1,134 @@
+CCS PCM C Compiler, Version 5.025, 30560               11-mai-22 19:32
+
+               Filename:   C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista C\Questão 14\MPLAB\Questão 14.lst
+
+               ROM used:   45 words (1%)
+                           Largest free fragment is 2048
+               RAM used:   7 (2%) at main() level
+                           7 (2%) worst case
+               Stack used: 0 locations
+               Stack size: 7
+
+*
+0000:  NOP
+0001:  MOVLW  00
+0002:  MOVWF  0A
+0003:  GOTO   004
+.................... /* 
+.................... Discente: Nilo Rodrigues Alves Filho 
+.................... Questão 14: 
+.................... Faça um programa para colocar em nível alto o estado do pino RC2/CCP1 toda vez que a contagem do TIMER1 for 10.  
+.................... Após, isso o estado deverá estar em nível baixo.  
+.................... */ 
+....................  
+....................  
+.................... #include <16f877a.h> 
+.................... //////////// Standard Header file for the PIC16F877A device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2013 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F877A 
+....................  
+.................... #list 
+....................  
+.................... #include <regs_pic16f877a.h> 
+.................... // DEFS_877  
+.................... //  
+.................... // Standard definitions for PIC16F877  
+.................... //  
+.................... // Copyright, Peter H. Anderson, Baltimore, MD, June, '99  
+....................   
+.................... //#define byte int  
+....................  
+.................... //#byte PORTD = 0x08 
+.................... //#bit INTF = 0xb.1 
+....................  
+.................... #list  
+....................  
+....................  
+....................  
+.................... void InitTimer1(){ 
+....................   t1con = 0x01; 
+....................   tmr1if = 0; 
+....................   tmr1h = 0xFF; 
+....................   tmr1l = 0xF6; 
+....................   tmr1ie = 1; 
+....................   intcon = 0xC0; 
+.................... } 
+....................   
+.................... void main(){ 
+0004:  MOVF   03,W
+0005:  ANDLW  1F
+0006:  MOVWF  03
+0007:  MOVLW  FF
+0008:  MOVWF  20
+0009:  BSF    03.5
+000A:  BSF    1F.0
+000B:  BSF    1F.1
+000C:  BSF    1F.2
+000D:  BCF    1F.3
+000E:  MOVLW  07
+000F:  MOVWF  1C
+0010:  BCF    03.7
+0011:  BCF    03.5
+0012:  CLRF   21
+.................... 	unsigned int cont = 0; 
+.................... 	set_tris_c(0x00); 
+0013:  MOVLW  00
+0014:  BSF    03.5
+0015:  MOVWF  07
+0016:  BCF    03.5
+0017:  MOVWF  20
+.................... 	 
+.................... 	while(1){ 
+.................... 		 
+.................... 		if (tmr1if){  
+0018:  BTFSS  0C.0
+0019:  GOTO   020
+.................... 			tmr1if = 0; 
+001A:  BCF    0C.0
+.................... 			tmr1h = 0xFF; 
+001B:  MOVLW  FF
+001C:  MOVWF  0F
+.................... 			tmr1l = 0xF6; 
+001D:  MOVLW  F6
+001E:  MOVWF  0E
+.................... 			cont++; 
+001F:  INCF   21,F
+.................... 		} 
+.................... 		 
+.................... 		if(cont == 10000000) 
+0020:  MOVF   21,W
+0021:  SUBLW  80
+0022:  BTFSS  03.2
+0023:  GOTO   02B
+.................... 		{ 
+.................... 			output_toggle(pin_c2); 
+0024:  BCF    20.2
+0025:  MOVF   20,W
+0026:  BSF    03.5
+0027:  MOVWF  07
+0028:  MOVLW  04
+0029:  BCF    03.5
+002A:  XORWF  07,F
+.................... 		} 
+002B:  GOTO   018
+.................... 	} 
+.................... 	 
+.................... 	 
+.................... 	 
+.................... 		 
+.................... 	 
+.................... } 
+002C:  GOTO   02C
+
+Configuration Fuses:
+   Word  1: 373B   RC NOWDT NOPUT NOBROWNOUT NOLVP NOCPD NOWRT DEBUG NOPROTECT
+
+   Some fuses have been forced to be compatible with the ICD debugger.

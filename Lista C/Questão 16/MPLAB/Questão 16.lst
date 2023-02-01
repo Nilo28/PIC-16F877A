@@ -1,0 +1,264 @@
+CCS PCM C Compiler, Version 5.025, 30560               11-mai-22 20:35
+
+               Filename:   C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista C\Questão 16\MPLAB\Questão 16.lst
+
+               ROM used:   166 words (2%)
+                           Largest free fragment is 2048
+               RAM used:   19 (5%) at main() level
+                           19 (5%) worst case
+               Stack used: 1 locations (0 in main + 1 for interrupts)
+               Stack size: 7
+
+*
+0000:  NOP
+0001:  MOVLW  00
+0002:  MOVWF  0A
+0003:  GOTO   04A
+0004:  MOVWF  7F
+0005:  SWAPF  03,W
+0006:  CLRF   03
+0007:  MOVWF  21
+0008:  MOVF   0A,W
+0009:  MOVWF  20
+000A:  CLRF   0A
+000B:  MOVF   04,W
+000C:  MOVWF  22
+000D:  MOVF   77,W
+000E:  MOVWF  23
+000F:  MOVF   78,W
+0010:  MOVWF  24
+0011:  MOVF   79,W
+0012:  MOVWF  25
+0013:  MOVF   7A,W
+0014:  MOVWF  26
+0015:  BCF    03.7
+0016:  BCF    03.5
+0017:  MOVLW  8C
+0018:  MOVWF  04
+0019:  BTFSS  00.0
+001A:  GOTO   01D
+001B:  BTFSC  0C.0
+001C:  GOTO   02E
+001D:  MOVF   22,W
+001E:  MOVWF  04
+001F:  MOVF   23,W
+0020:  MOVWF  77
+0021:  MOVF   24,W
+0022:  MOVWF  78
+0023:  MOVF   25,W
+0024:  MOVWF  79
+0025:  MOVF   26,W
+0026:  MOVWF  7A
+0027:  MOVF   20,W
+0028:  MOVWF  0A
+0029:  SWAPF  21,W
+002A:  MOVWF  03
+002B:  SWAPF  7F,F
+002C:  SWAPF  7F,W
+002D:  RETFIE
+002E:  BCF    0A.3
+002F:  BCF    0A.4
+0030:  GOTO   031
+.................... /* 
+.................... Discente: Nilo Rodrigues Alves Filho 
+.................... Questão 16: 
+.................... Faça o mesmo do item anterior, modificando apenas o tipo de evento a ser medido.  
+.................... No caso deste, para medir o tempo em nível alto do sinal ao invés do período.  
+....................  
+.................... */ 
+....................  
+.................... #include <16f877a.h> 
+.................... //////////// Standard Header file for the PIC16F877A device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2013 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F877A 
+....................  
+.................... #list 
+....................  
+.................... #include <regs_pic16f877a.h> 
+.................... // DEFS_877  
+.................... //  
+.................... // Standard definitions for PIC16F877  
+.................... //  
+.................... // Copyright, Peter H. Anderson, Baltimore, MD, June, '99  
+....................   
+.................... //#define byte int  
+....................  
+.................... //#byte PORTD = 0x08 
+.................... //#bit INTF = 0xb.1 
+....................  
+.................... #list  
+....................  
+....................  
+....................  
+.................... unsigned int16 cont = 0; 
+.................... int Tempo_1 = 0, Tempo_F, capt1; 
+....................  
+....................  
+.................... #int_timer1 
+.................... void interrupcao_TMR1(void){  
+....................    set_timer1(65036); 
+0031:  CLRF   0E
+0032:  MOVLW  FE
+0033:  MOVWF  0F
+0034:  MOVLW  0C
+0035:  MOVWF  0E
+....................    cont++; 
+0036:  INCF   27,F
+0037:  BTFSC  03.2
+0038:  INCF   28,F
+....................    if(cont > 500){ 
+0039:  MOVF   28,W
+003A:  SUBLW  00
+003B:  BTFSC  03.0
+003C:  GOTO   046
+003D:  XORLW  FF
+003E:  BTFSS  03.2
+003F:  GOTO   044
+0040:  MOVF   27,W
+0041:  SUBLW  F4
+0042:  BTFSC  03.0
+0043:  GOTO   046
+.................... 	 cont = 0; 
+0044:  CLRF   28
+0045:  CLRF   27
+....................    }  
+0046:  BCF    0C.0
+0047:  BCF    0A.3
+0048:  BCF    0A.4
+0049:  GOTO   01D
+.................... } 
+....................  
+.................... void main(){    
+004A:  MOVF   03,W
+004B:  ANDLW  1F
+004C:  MOVWF  03
+004D:  CLRF   28
+004E:  CLRF   27
+004F:  CLRF   29
+0050:  MOVLW  FF
+0051:  MOVWF  2C
+0052:  BSF    03.5
+0053:  BSF    1F.0
+0054:  BSF    1F.1
+0055:  BSF    1F.2
+0056:  BCF    1F.3
+0057:  MOVLW  07
+0058:  MOVWF  1C
+0059:  BCF    03.7
+.................... 	setup_ccp1(CCP_CAPTURE_RE); 
+005A:  BCF    03.5
+005B:  BSF    2C.2
+005C:  MOVF   2C,W
+005D:  BSF    03.5
+005E:  MOVWF  07
+005F:  BCF    03.5
+0060:  CLRF   17
+0061:  MOVLW  05
+0062:  MOVWF  17
+....................     set_timer1(T1_INTERNAL|T1_DIV_BY_1); 
+0063:  CLRF   0E
+0064:  CLRF   0F
+0065:  MOVLW  85
+0066:  MOVWF  0E
+....................     set_timer1(65036); 
+0067:  CLRF   0E
+0068:  MOVLW  FE
+0069:  MOVWF  0F
+006A:  MOVLW  0C
+006B:  MOVWF  0E
+....................     INTCON = 0x80; 
+006C:  MOVLW  80
+006D:  MOVWF  0B
+....................     PIE1 = 0x01; 
+006E:  MOVLW  01
+006F:  BSF    03.5
+0070:  MOVWF  0C
+....................     TRISC = 0x04;       
+0071:  MOVLW  04
+0072:  MOVWF  07
+....................     PORTC = 0x00; 
+0073:  BCF    03.5
+0074:  CLRF   07
+....................     capt1 = 1; 
+0075:  MOVLW  01
+0076:  MOVWF  2B
+....................     while(1){ 
+....................        if(cont > 0 || cont <=500){ 
+0077:  MOVF   27,F
+0078:  BTFSS  03.2
+0079:  GOTO   087
+007A:  MOVF   28,F
+007B:  BTFSS  03.2
+007C:  GOTO   087
+007D:  MOVF   28,W
+007E:  SUBLW  01
+007F:  BTFSS  03.0
+0080:  GOTO   0A4
+0081:  BTFSS  03.2
+0082:  GOTO   087
+0083:  MOVF   27,W
+0084:  SUBLW  F4
+0085:  BTFSS  03.0
+0086:  GOTO   0A4
+....................           if (ccp1if == 1){ 
+0087:  BTFSS  0C.2
+0088:  GOTO   0A4
+....................              if (capt1 == 1){ 
+0089:  DECFSZ 2B,W
+008A:  GOTO   096
+....................                 Tempo_1 = CCP_1; 
+008B:  MOVF   15,W
+008C:  MOVWF  29
+....................                 setup_ccp1(CCP_CAPTURE_FE); 
+008D:  BSF    2C.2
+008E:  MOVF   2C,W
+008F:  BSF    03.5
+0090:  MOVWF  07
+0091:  BCF    03.5
+0092:  CLRF   17
+0093:  MOVLW  04
+0094:  MOVWF  17
+....................              } 
+0095:  GOTO   0A1
+....................  
+....................              else 
+....................              { 
+....................                 Tempo_F = CCP_1 - Tempo_1; 
+0096:  MOVF   29,W
+0097:  SUBWF  15,W
+0098:  MOVWF  2A
+....................                 setup_ccp1(CCP_CAPTURE_RE); 
+0099:  BSF    2C.2
+009A:  MOVF   2C,W
+009B:  BSF    03.5
+009C:  MOVWF  07
+009D:  BCF    03.5
+009E:  CLRF   17
+009F:  MOVLW  05
+00A0:  MOVWF  17
+....................              } 
+....................              ccp1if = 0; 
+00A1:  BCF    0C.2
+....................              capt1 = capt1 ^ 1; 
+00A2:  MOVLW  01
+00A3:  XORWF  2B,F
+....................           } 
+....................        } 
+00A4:  GOTO   077
+....................           
+....................     }       
+.................... } 
+00A5:  GOTO   0A5
+
+Configuration Fuses:
+   Word  1: 373B   RC NOWDT NOPUT NOBROWNOUT NOLVP NOCPD NOWRT DEBUG NOPROTECT
+
+   Some fuses have been forced to be compatible with the ICD debugger.

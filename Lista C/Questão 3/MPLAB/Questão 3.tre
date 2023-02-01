@@ -1,0 +1,17 @@
+ÀÄQuestão 3
+   ÀÄmain  0/174  Ram=3
+      ÃÄ@cinit1  (Inline)  Ram=0
+      ÃÄ@DIV1616  0/37  Ram=5
+      ÃÄ@DIV1616  0/37  Ram=5
+      ÃÄ@DIV1616  0/37  Ram=5
+      ÃÄ@DIV1616  0/37  Ram=5
+      ÃÄ@DIV1616  0/37  Ram=5
+      ÃÄ@DIV1616  0/37  Ram=5
+      ÃÄ@const867  0/14  Ram=0
+      ÃÄ@delay_ms1  0/21  Ram=1
+      ÃÄ@const867  0/14  Ram=0
+      ÃÄ@delay_ms1  0/21  Ram=1
+      ÃÄ@const867  0/14  Ram=0
+      ÃÄ@delay_ms1  0/21  Ram=1
+      ÃÄ@const867  0/14  Ram=0
+      ÀÄ@delay_ms1  0/21  Ram=1

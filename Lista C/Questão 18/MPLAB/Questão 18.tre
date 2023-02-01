@@ -1,0 +1,8 @@
+ÀÄQuestão 18
+   ÀÄmain  0/317  Ram=5
+      ÃÄ@cinit1  (Inline)  Ram=0
+      ÃÄ@MULFF  0/134  Ram=13
+      ÃÄ@ITOF  0/31  Ram=2
+      ÃÄ@MULFF  0/134  Ram=13
+      ÃÄ@delay_ms1  0/20  Ram=1
+      ÀÄ@delay_ms1  0/20  Ram=1

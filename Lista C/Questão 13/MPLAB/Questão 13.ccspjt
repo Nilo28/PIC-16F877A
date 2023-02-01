@@ -1,0 +1,14 @@
+[PROJECT]
+Target=Questão 13.hex
+Processor_Text=PIC16F877A
+CCSVersion=5.025
+Compiler=PCM
+[Target Data]
+FileList=Questão 13.c
+[Questão 13.c]
+Type=4
+[mru-list]
+1=Questão 13.c
+[Units]
+Count=1
+1=Questão 13 (main)

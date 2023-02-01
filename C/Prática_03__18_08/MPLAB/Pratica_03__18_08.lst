@@ -1,0 +1,312 @@
+CCS PCM C Compiler, Version 5.025, 22995               15-set-22 16:36
+
+               Filename:   C:\Users\nilof\OneDrive\Área de Trabalho\Lab micro\Prática_03__18_08\MPLAB\Pratica_03__18_08.lst
+
+               ROM used:   168 words (2%)
+                           Largest free fragment is 2048
+               RAM used:   9 (3%) at main() level
+                           9 (3%) worst case
+               Stack used: 1 locations
+               Stack size: 7
+
+*
+0000:  NOP
+0001:  MOVLW  00
+0002:  MOVWF  0A
+0003:  GOTO   019
+.................... /* Prática 03 - 18/08 
+.................... Grupo: 
+.................... - Antônio Gustavo da Silva Moura  
+.................... - Manoel Barroso da Silva Moura 
+.................... - Nilo Rodrigues Alves Filho 
+....................  
+.................... Botão S1 -> Incrementa o valor 
+.................... Botão S2 -> Decrementa o valor 
+.................... % Botões de pull-up {Pressionado -> 0, Liberado -> 1} % 
+....................  
+.................... PORTD -> Display de 7 segmentos 
+.................... RD0 -> a  RD1 -> b  RD2 -> c  RD3 -> d  RD4 -> e  RD5 -> f  RD6 -> g  RD7 -> h  
+.................... */ 
+....................  
+.................... #include <16f877a.h> 
+.................... //////////// Standard Header file for the PIC16F877A device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2013 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F877A 
+*
+009A:  BCF    0A.0
+009B:  BCF    0A.1
+009C:  BCF    0A.2
+009D:  ADDWF  02,F
+009E:  GOTO   05D
+009F:  GOTO   063
+00A0:  GOTO   069
+00A1:  GOTO   06F
+00A2:  GOTO   075
+00A3:  GOTO   07B
+00A4:  GOTO   081
+00A5:  GOTO   087
+00A6:  GOTO   08D
+00A7:  GOTO   093
+....................  
+.................... #list 
+....................  
+.................... #include "regs_pic16f877a.h" 
+.................... // DEFS_877  
+.................... //  
+.................... // Standard definitions for PIC16F877  
+.................... //  
+.................... // Copyright, Peter H. Anderson, Baltimore, MD, June, '99  
+....................   
+.................... //#define byte int  
+....................  
+.................... //#byte PORTD = 0x08 
+.................... //#bit INTF = 0xb.1 
+....................  
+.................... #list  
+....................  
+....................  
+....................  
+.................... #use delay(clock=4000000) 
+*
+0004:  MOVLW  24
+0005:  MOVWF  04
+0006:  BCF    03.7
+0007:  MOVF   00,W
+0008:  BTFSC  03.2
+0009:  GOTO   018
+000A:  MOVLW  01
+000B:  MOVWF  78
+000C:  CLRF   77
+000D:  DECFSZ 77,F
+000E:  GOTO   00D
+000F:  DECFSZ 78,F
+0010:  GOTO   00C
+0011:  MOVLW  4A
+0012:  MOVWF  77
+0013:  DECFSZ 77,F
+0014:  GOTO   013
+0015:  GOTO   016
+0016:  DECFSZ 00,F
+0017:  GOTO   00A
+0018:  RETURN
+.................... #bit chaveS1 = PORTB.0	 	 
+.................... #bit chaveS2 = PORTB.1		 
+.................... #Define press 0			//Valor na porta quando botão pressionado 
+.................... #Define liber 1			//Valor na porta quando botão liberado 
+....................  
+.................... void main(){ 
+0019:  MOVF   03,W
+001A:  ANDLW  1F
+001B:  MOVWF  03
+001C:  BSF    03.5
+001D:  BSF    1F.0
+001E:  BSF    1F.1
+001F:  BSF    1F.2
+0020:  BCF    1F.3
+0021:  MOVLW  07
+0022:  MOVWF  1C
+0023:  BCF    03.7
+0024:  BCF    03.5
+0025:  CLRF   21
+0026:  CLRF   22
+0027:  CLRF   23
+.................... 	//Variáveis 
+.................... 	unsigned int controleS1 = 0;	//Variável do controle do botão RB0 
+.................... 	unsigned int controleS2 = 0;	//Variável do controle do botão RB1 
+.................... 	unsigned int valor = 0;			//Variável para armazenar o valor a ser apresentado 
+.................... 	 
+.................... 	//Entradas 
+.................... 	trisb0 = 1;	//Botão S1 como entrada 
+0028:  BSF    03.5
+0029:  BSF    06.0
+.................... 	trisb1 = 1;	//Botão S2 como entrada 
+002A:  BSF    06.1
+.................... 	 
+.................... 	//Saídas  
+.................... 	set_tris_d(0x00);	//Saída para o display 
+002B:  MOVLW  00
+002C:  MOVWF  08
+.................... 	 
+.................... 	 
+.................... 	output_high(pin_b4);	// Seleciona o Diplay ds4 
+002D:  BCF    06.4
+002E:  BCF    03.5
+002F:  BSF    06.4
+.................... 	 
+.................... 	while(true){	//LOOP Infinito 
+.................... 		//Botão S1 
+.................... 		if(chaveS1 == press && controleS1 == 0){ 
+0030:  BTFSC  06.0
+0031:  GOTO   03F
+0032:  MOVF   21,F
+0033:  BTFSS  03.2
+0034:  GOTO   03F
+.................... 			controleS1 = 1;							 
+0035:  MOVLW  01
+0036:  MOVWF  21
+.................... 			if(valor < 9)	//Define valor máximo do display 
+0037:  MOVF   23,W
+0038:  SUBLW  08
+0039:  BTFSC  03.0
+.................... 				valor++; 
+003A:  INCF   23,F
+.................... 			Delay_ms(200);	//Delay para tratar bouncing 
+003B:  MOVLW  C8
+003C:  MOVWF  24
+003D:  CALL   004
+.................... 		} 
+003E:  GOTO   044
+.................... 		else if(chaveS1 == liber && controleS1 == 1){ 
+003F:  BTFSS  06.0
+0040:  GOTO   044
+0041:  DECFSZ 21,W
+0042:  GOTO   044
+.................... 			controleS1 = 0; 
+0043:  CLRF   21
+.................... 		} 
+.................... 		 
+.................... 		//Botão S2	 
+.................... 		if(chaveS2 == press && controleS2 == 0){ 
+0044:  BTFSC  06.1
+0045:  GOTO   052
+0046:  MOVF   22,F
+0047:  BTFSS  03.2
+0048:  GOTO   052
+.................... 			controleS2 = 1; 
+0049:  MOVLW  01
+004A:  MOVWF  22
+.................... 			if(valor > 0) 	//Define valor mínimo do display 
+004B:  MOVF   23,F
+004C:  BTFSS  03.2
+.................... 				valor--; 
+004D:  DECF   23,F
+.................... 			Delay_ms(200);	//Delay para tratar bouncing 
+004E:  MOVLW  C8
+004F:  MOVWF  24
+0050:  CALL   004
+.................... 		} 
+0051:  GOTO   057
+.................... 		else if(chaveS2 == liber && controleS2 == 1){ 
+0052:  BTFSS  06.1
+0053:  GOTO   057
+0054:  DECFSZ 22,W
+0055:  GOTO   057
+.................... 			controleS2 = 0; 
+0056:  CLRF   22
+.................... 		} 
+.................... 		 
+.................... 		//Alterando o valor do display	 
+.................... 		switch(valor){ 
+0057:  MOVF   23,W
+0058:  ADDLW  F6
+0059:  BTFSC  03.0
+005A:  GOTO   098
+005B:  ADDLW  0A
+005C:  GOTO   09A
+.................... 			case 0x00: 
+.................... 				output_d(0b00111111);		//Imprime 0 no display  
+005D:  BSF    03.5
+005E:  CLRF   08
+005F:  MOVLW  3F
+0060:  BCF    03.5
+0061:  MOVWF  08
+.................... 				break; 
+0062:  GOTO   098
+.................... 			case 0x01: 
+.................... 				output_d(0b00000110);		//Imprime 1 no display 
+0063:  BSF    03.5
+0064:  CLRF   08
+0065:  MOVLW  06
+0066:  BCF    03.5
+0067:  MOVWF  08
+.................... 				break; 
+0068:  GOTO   098
+.................... 			case 0x02: 
+.................... 				output_d(0b01011011);		//Imprime 2 no display 
+0069:  BSF    03.5
+006A:  CLRF   08
+006B:  MOVLW  5B
+006C:  BCF    03.5
+006D:  MOVWF  08
+.................... 				break; 
+006E:  GOTO   098
+.................... 			case 0x03: 
+.................... 				output_d(0b01001111);		//Imprime 3 no display 
+006F:  BSF    03.5
+0070:  CLRF   08
+0071:  MOVLW  4F
+0072:  BCF    03.5
+0073:  MOVWF  08
+.................... 				break; 
+0074:  GOTO   098
+.................... 			case 0x04: 
+.................... 				output_d(0b01100110);		//Imprime 4 no display 
+0075:  BSF    03.5
+0076:  CLRF   08
+0077:  MOVLW  66
+0078:  BCF    03.5
+0079:  MOVWF  08
+.................... 				break; 
+007A:  GOTO   098
+.................... 			case 0x05: 
+.................... 				output_d(0b01101101);		//Imprime 5 no display 
+007B:  BSF    03.5
+007C:  CLRF   08
+007D:  MOVLW  6D
+007E:  BCF    03.5
+007F:  MOVWF  08
+.................... 				break; 
+0080:  GOTO   098
+.................... 			case 0x06: 
+.................... 				output_d(0b01111101);		//Imprime 6 no display 
+0081:  BSF    03.5
+0082:  CLRF   08
+0083:  MOVLW  7D
+0084:  BCF    03.5
+0085:  MOVWF  08
+.................... 				break; 
+0086:  GOTO   098
+.................... 			case 0x07: 
+.................... 				output_d(0b00000111);		//Imprime 7 no display 
+0087:  BSF    03.5
+0088:  CLRF   08
+0089:  MOVLW  07
+008A:  BCF    03.5
+008B:  MOVWF  08
+.................... 				break; 
+008C:  GOTO   098
+.................... 			case 0x08: 
+.................... 				output_d(0b01111111);		//Imprime 8 no display 
+008D:  BSF    03.5
+008E:  CLRF   08
+008F:  MOVLW  7F
+0090:  BCF    03.5
+0091:  MOVWF  08
+.................... 				break; 
+0092:  GOTO   098
+.................... 			case 0x09: 
+.................... 				output_d(0b01101111);		//Imprime 9 no display 
+0093:  BSF    03.5
+0094:  CLRF   08
+0095:  MOVLW  6F
+0096:  BCF    03.5
+0097:  MOVWF  08
+.................... 				break; 
+.................... 		} 
+0098:  GOTO   030
+.................... 	} 
+.................... } 
+0099:  GOTO   099
+
+Configuration Fuses:
+   Word  1: 373B   RC NOWDT NOPUT NOBROWNOUT NOLVP NOCPD NOWRT DEBUG NOPROTECT
+
+   Some fuses have been forced to be compatible with the ICD debugger.

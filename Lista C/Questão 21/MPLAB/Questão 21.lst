@@ -1,0 +1,370 @@
+CCS PCM C Compiler, Version 5.025, 30560               11-mai-22 19:21
+
+               Filename:   C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista C\Questão 21\MPLAB\Questão 21.lst
+
+               ROM used:   273 words (3%)
+                           Largest free fragment is 2048
+               RAM used:   15 (4%) at main() level
+                           20 (6%) worst case
+               Stack used: 1 locations
+               Stack size: 7
+
+*
+0000:  NOP
+0001:  MOVLW  00
+0002:  MOVWF  0A
+0003:  GOTO   067
+.................... /* 
+.................... Discente: Nilo Rodrigues Alves Filho 
+.................... Questão 21: 
+.................... Aproveitando o programa anterior e o alterando, faça um programa para enviar e receber dados do  
+.................... PIC a partir do terminal serial do computador1 
+.................... . Da seguinte forma:  
+.................... 	I. O PIC ao receber a letra 'a' e em seguida a letra 'n', os quatro bytes de V2 serão transmitidos do PIC ao computador.   
+.................... 	   Como mostrado na aula, utilize também a função printf("%u, ",V2[i]).  
+.................... 	II. Ao receber a letra 'b' e '0', nessa sequência, o vetor V1 é preenchido com o valor 0x81 e 0xAA 	nesta ordem, ou seja, V1 = {0x81 , 0xAA}.  
+.................... 	Se receber a letra 'b' e '1', nessa sequência, o vetor 	V1 fica V1 = {0x81 , 0x55}.  
+.................... 	III. Ao receber a letra 'c' e um caracter qualquer (x), nessa sequência, o vetor V1 é V1 = {0x82, x. 
+....................  
+.................... */ 
+....................  
+.................... #include <16f877a.h> 
+.................... //////////// Standard Header file for the PIC16F877A device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2013 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F877A 
+0004:  MOVF   2E,W
+0005:  CLRF   78
+0006:  SUBWF  2D,W
+0007:  BTFSC  03.0
+0008:  GOTO   00C
+0009:  MOVF   2D,W
+000A:  MOVWF  77
+000B:  GOTO   018
+000C:  CLRF   77
+000D:  MOVLW  08
+000E:  MOVWF  2F
+000F:  RLF    2D,F
+0010:  RLF    77,F
+0011:  MOVF   2E,W
+0012:  SUBWF  77,W
+0013:  BTFSC  03.0
+0014:  MOVWF  77
+0015:  RLF    78,F
+0016:  DECFSZ 2F,F
+0017:  GOTO   00F
+0018:  RETURN
+0019:  MOVF   78,W
+001A:  MOVF   2B,W
+001B:  MOVWF  2D
+001C:  MOVLW  64
+001D:  MOVWF  2E
+001E:  CALL   004
+001F:  MOVF   77,W
+0020:  MOVWF  2B
+0021:  MOVF   78,W
+0022:  MOVLW  30
+0023:  BTFSS  03.2
+0024:  GOTO   02C
+0025:  BTFSS  2C.1
+0026:  GOTO   034
+0027:  BTFSC  2C.3
+0028:  GOTO   034
+0029:  BTFSC  2C.4
+002A:  MOVLW  20
+002B:  GOTO   02F
+002C:  BCF    2C.3
+002D:  BCF    2C.4
+002E:  BSF    2C.0
+002F:  ADDWF  78,F
+0030:  MOVF   78,W
+0031:  BTFSS  0C.4
+0032:  GOTO   031
+0033:  MOVWF  19
+0034:  MOVF   2B,W
+0035:  MOVWF  2D
+0036:  MOVLW  0A
+0037:  MOVWF  2E
+0038:  CALL   004
+0039:  MOVF   77,W
+003A:  MOVWF  2B
+003B:  MOVF   78,W
+003C:  MOVLW  30
+003D:  BTFSS  03.2
+003E:  GOTO   045
+003F:  BTFSC  2C.3
+0040:  GOTO   04A
+0041:  BTFSS  2C.0
+0042:  GOTO   04A
+0043:  BTFSC  2C.4
+0044:  MOVLW  20
+0045:  ADDWF  78,F
+0046:  MOVF   78,W
+0047:  BTFSS  0C.4
+0048:  GOTO   047
+0049:  MOVWF  19
+004A:  MOVLW  30
+004B:  ADDWF  2B,F
+004C:  MOVF   2B,W
+004D:  BTFSS  0C.4
+004E:  GOTO   04D
+004F:  MOVWF  19
+0050:  BCF    0A.3
+0051:  BCF    0A.4
+0052:  GOTO   0A4 (RETURN)
+....................  
+.................... #list 
+....................  
+.................... #include <regs_pic16f877a.h> 
+.................... // DEFS_877  
+.................... //  
+.................... // Standard definitions for PIC16F877  
+.................... //  
+.................... // Copyright, Peter H. Anderson, Baltimore, MD, June, '99  
+....................   
+.................... //#define byte int  
+....................  
+.................... //#byte PORTD = 0x08 
+.................... //#bit INTF = 0xb.1 
+....................  
+.................... #list  
+....................  
+....................  
+....................  
+.................... #use delay (clock = 20000000) 
+0053:  MOVLW  2B
+0054:  MOVWF  04
+0055:  BCF    03.7
+0056:  MOVF   00,W
+0057:  BTFSC  03.2
+0058:  GOTO   066
+0059:  MOVLW  06
+005A:  MOVWF  78
+005B:  CLRF   77
+005C:  DECFSZ 77,F
+005D:  GOTO   05C
+005E:  DECFSZ 78,F
+005F:  GOTO   05B
+0060:  MOVLW  7B
+0061:  MOVWF  77
+0062:  DECFSZ 77,F
+0063:  GOTO   062
+0064:  DECFSZ 00,F
+0065:  GOTO   059
+0066:  RETURN
+.................... #use rs232(baud = 9600, BITS = 8, PARITY = N, STOP = 1, xmit = PIN_C6,rcv = PIN_C7) 
+....................  
+.................... void main(){ unsigned int8 Vetor_n1[2], Vetor_n2[4]; 
+0067:  MOVF   03,W
+0068:  ANDLW  1F
+0069:  MOVWF  03
+006A:  MOVLW  81
+006B:  BSF    03.5
+006C:  MOVWF  19
+006D:  MOVLW  A6
+006E:  MOVWF  18
+006F:  MOVLW  90
+0070:  BCF    03.5
+0071:  MOVWF  18
+0072:  BSF    03.5
+0073:  BSF    1F.0
+0074:  BSF    1F.1
+0075:  BSF    1F.2
+0076:  BCF    1F.3
+0077:  MOVLW  07
+0078:  MOVWF  1C
+0079:  BCF    03.7
+.................... 	char *X; 
+....................    	int i; 
+....................  
+....................    	while (TRUE){ 
+....................        X = getc(); 
+007A:  BCF    03.5
+007B:  BTFSS  0C.5
+007C:  GOTO   07B
+007D:  MOVF   1A,W
+007E:  CLRF   7A
+007F:  MOVWF  27
+0080:  MOVF   7A,W
+0081:  MOVWF  28
+....................        if (X[0] == 'a' && X[1] == 'n'){ 
+0082:  MOVF   27,W
+0083:  MOVWF  04
+0084:  BCF    03.7
+0085:  BTFSC  28.0
+0086:  BSF    03.7
+0087:  MOVF   00,W
+0088:  SUBLW  61
+0089:  BTFSS  03.2
+008A:  GOTO   0B9
+008B:  MOVLW  01
+008C:  ADDWF  27,W
+008D:  MOVWF  04
+008E:  BCF    03.7
+008F:  BTFSC  28.0
+0090:  BSF    03.7
+0091:  MOVF   00,W
+0092:  SUBLW  6E
+0093:  BTFSS  03.2
+0094:  GOTO   0B9
+....................           for (i = 0; i<=3; i++){ 
+0095:  CLRF   29
+0096:  MOVF   29,W
+0097:  SUBLW  03
+0098:  BTFSS  03.0
+0099:  GOTO   0B2
+....................              printf("%u /n", Vetor_n2[i]); 
+009A:  MOVLW  23
+009B:  ADDWF  29,W
+009C:  MOVWF  04
+009D:  BCF    03.7
+009E:  MOVF   00,W
+009F:  MOVWF  2A
+00A0:  MOVWF  2B
+00A1:  MOVLW  1B
+00A2:  MOVWF  2C
+00A3:  GOTO   019
+00A4:  MOVLW  20
+00A5:  BTFSS  0C.4
+00A6:  GOTO   0A5
+00A7:  MOVWF  19
+00A8:  MOVLW  2F
+00A9:  BTFSS  0C.4
+00AA:  GOTO   0A9
+00AB:  MOVWF  19
+00AC:  MOVLW  6E
+00AD:  BTFSS  0C.4
+00AE:  GOTO   0AD
+00AF:  MOVWF  19
+00B0:  INCF   29,F
+00B1:  GOTO   096
+....................           } 
+....................           delay_ms(1000); 
+00B2:  MOVLW  04
+00B3:  MOVWF  2A
+00B4:  MOVLW  FA
+00B5:  MOVWF  2B
+00B6:  CALL   053
+00B7:  DECFSZ 2A,F
+00B8:  GOTO   0B4
+....................        } 
+....................  
+....................        if (X[0] == 'b' && X[1] == '0'){ 
+00B9:  MOVF   27,W
+00BA:  MOVWF  04
+00BB:  BCF    03.7
+00BC:  BTFSC  28.0
+00BD:  BSF    03.7
+00BE:  MOVF   00,W
+00BF:  SUBLW  62
+00C0:  BTFSS  03.2
+00C1:  GOTO   0D7
+00C2:  MOVLW  01
+00C3:  ADDWF  27,W
+00C4:  MOVWF  04
+00C5:  BCF    03.7
+00C6:  BTFSC  28.0
+00C7:  BSF    03.7
+00C8:  MOVF   00,W
+00C9:  SUBLW  30
+00CA:  BTFSS  03.2
+00CB:  GOTO   0D7
+....................           Vetor_n1[0] = 0x81; 
+00CC:  MOVLW  81
+00CD:  MOVWF  21
+....................           Vetor_n1[1] = 0xAA; 
+00CE:  MOVLW  AA
+00CF:  MOVWF  22
+....................           delay_ms(1000); 
+00D0:  MOVLW  04
+00D1:  MOVWF  2A
+00D2:  MOVLW  FA
+00D3:  MOVWF  2B
+00D4:  CALL   053
+00D5:  DECFSZ 2A,F
+00D6:  GOTO   0D2
+....................        } 
+....................  
+....................        if (X[0]== 'b' && X[1] == '1'){ 
+00D7:  MOVF   27,W
+00D8:  MOVWF  04
+00D9:  BCF    03.7
+00DA:  BTFSC  28.0
+00DB:  BSF    03.7
+00DC:  MOVF   00,W
+00DD:  SUBLW  62
+00DE:  BTFSS  03.2
+00DF:  GOTO   0F5
+00E0:  MOVLW  01
+00E1:  ADDWF  27,W
+00E2:  MOVWF  04
+00E3:  BCF    03.7
+00E4:  BTFSC  28.0
+00E5:  BSF    03.7
+00E6:  MOVF   00,W
+00E7:  SUBLW  31
+00E8:  BTFSS  03.2
+00E9:  GOTO   0F5
+....................           Vetor_n1[0] = 0x81; 
+00EA:  MOVLW  81
+00EB:  MOVWF  21
+....................           Vetor_n1[1] = 0x55; 
+00EC:  MOVLW  55
+00ED:  MOVWF  22
+....................           delay_ms(1000); 
+00EE:  MOVLW  04
+00EF:  MOVWF  2A
+00F0:  MOVLW  FA
+00F1:  MOVWF  2B
+00F2:  CALL   053
+00F3:  DECFSZ 2A,F
+00F4:  GOTO   0F0
+....................        } 
+....................  
+....................        if (X[0]== 'c'){ 
+00F5:  MOVF   27,W
+00F6:  MOVWF  04
+00F7:  BCF    03.7
+00F8:  BTFSC  28.0
+00F9:  BSF    03.7
+00FA:  MOVF   00,W
+00FB:  SUBLW  63
+00FC:  BTFSS  03.2
+00FD:  GOTO   10F
+....................           Vetor_n1[0] = 0x82; 
+00FE:  MOVLW  82
+00FF:  MOVWF  21
+....................           Vetor_n1[1] = X[1]; 
+0100:  MOVLW  01
+0101:  ADDWF  27,W
+0102:  MOVWF  04
+0103:  BCF    03.7
+0104:  BTFSC  28.0
+0105:  BSF    03.7
+0106:  MOVF   00,W
+0107:  MOVWF  22
+....................           delay_ms(1000); 
+0108:  MOVLW  04
+0109:  MOVWF  2A
+010A:  MOVLW  FA
+010B:  MOVWF  2B
+010C:  CALL   053
+010D:  DECFSZ 2A,F
+010E:  GOTO   10A
+....................        } 
+010F:  GOTO   07B
+....................     } 
+.................... } 
+0110:  GOTO   110
+
+Configuration Fuses:
+   Word  1: 373B   RC NOWDT NOPUT NOBROWNOUT NOLVP NOCPD NOWRT DEBUG NOPROTECT
+
+   Some fuses have been forced to be compatible with the ICD debugger.

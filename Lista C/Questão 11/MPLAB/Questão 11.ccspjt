@@ -1,0 +1,14 @@
+[PROJECT]
+Target=Questão 11.hex
+Processor_Text=PIC16F877A
+CCSVersion=5.025
+Compiler=PCM
+[Target Data]
+FileList=Questão 11.c
+[Questão 11.c]
+Type=4
+[mru-list]
+1=Questão 11.c
+[Units]
+Count=1
+1=Questão 11 (main)

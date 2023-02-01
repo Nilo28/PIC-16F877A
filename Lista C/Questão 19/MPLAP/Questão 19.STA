@@ -1,0 +1,57 @@
+
+ROM used:   1434/7936 (18%)
+            1434/7936 (18%) including unused fragments
+
+            0.4 Average locations per line
+            5.3 Average locations per statement
+
+RAM used:   17/357 (5%) at main() level
+            85/357 (24%) worst case
+
+Stack used: 1 worst case (1 in main + 0 for interrupts)
+Stack size: 7
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+   30    14   5  Questão 19.c
+  672     0   0  ..\..\..\..\..\..\..\..\..\..\Program Files (x86)\PICC\devices\16f877a.h
+ 2229   257  95  ..\..\..\..\..\..\..\..\..\..\Program Files (x86)\PICC\drivers\math.h
+  399     0   0  regs_pic16f877a.h
+----- -----
+ 3330   271 Total
+
+Page ROM  %  RAM    Vol Diff  Functions:
+---- --- --- ---    --- ----  ----------
+ Inline        10             @FLT
+ Inline         4             @SFTOI
+0     29   2    2             @ITOF
+0    117   8   13             @MULFF
+0    321  22   16             @ADDFF
+0    204  14   14             @DIVFF
+ Inline        46   1146  9.9  cos
+0    557  39    8     44  1.9  sin
+0    202  14    6    355  5.9  MAIN
+ Inline         0             @cinit1
+
+Program metrics:
+    Functions               3
+    Statements              271
+    Comments                444
+    Volume (V)              1838
+    Difficulty (D)          17.1
+    Effort to implement (E) 31512
+    Time to implement (T)   29 minutes
+    Est Delivered Bugs (B)  0
+    Cyclomatic Complexity   7
+    Maintainability (MI)    64
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00003     4  0  
+00004-007FF  1430  614  
+00800-00FFF     0  2048  
+01000-017FF     0  2048  
+01800-01EFF     0  1792  
+
+
+

@@ -1,0 +1,40 @@
+MPLINK 4.37, Linker
+Linker Map File - Created Thu Sep 15 15:27:16 2022
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x000022
+.config_2007_PRATICA_26_07_22.O       code   0x002007    program   0x000002
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000010      
+                            0x002007    0x002007      
+            18 out of 8453 program addresses used, program memory utilization is 0%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                  desliga   0x00000f    program     static C:\Users\nilof\OneDrive\Área de Trabalho\Lab micro\Prática_01__16.07\MPLAB\Pratica_26_07_22.asm
+                   inicio   0x000004    program     static C:\Users\nilof\OneDrive\Área de Trabalho\Lab micro\Prática_01__16.07\MPLAB\Pratica_26_07_22.asm
+                     liga   0x00000d    program     static C:\Users\nilof\OneDrive\Área de Trabalho\Lab micro\Prática_01__16.07\MPLAB\Pratica_26_07_22.asm
+                     main   0x00000b    program     static C:\Users\nilof\OneDrive\Área de Trabalho\Lab micro\Prática_01__16.07\MPLAB\Pratica_26_07_22.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                   inicio   0x000004    program     static C:\Users\nilof\OneDrive\Área de Trabalho\Lab micro\Prática_01__16.07\MPLAB\Pratica_26_07_22.asm
+                     main   0x00000b    program     static C:\Users\nilof\OneDrive\Área de Trabalho\Lab micro\Prática_01__16.07\MPLAB\Pratica_26_07_22.asm
+                     liga   0x00000d    program     static C:\Users\nilof\OneDrive\Área de Trabalho\Lab micro\Prática_01__16.07\MPLAB\Pratica_26_07_22.asm
+                  desliga   0x00000f    program     static C:\Users\nilof\OneDrive\Área de Trabalho\Lab micro\Prática_01__16.07\MPLAB\Pratica_26_07_22.asm
+
+

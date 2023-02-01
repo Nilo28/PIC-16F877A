@@ -1,0 +1,4 @@
+>>> Warning 203 "Questão 1.c" Line 35(1,1): Condition always TRUE
+      Memory usage:   ROM=2%      RAM=4% - 6%
+      0 Errors,  1 Warnings.
+Build Successful.

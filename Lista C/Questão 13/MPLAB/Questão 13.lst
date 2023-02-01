@@ -1,0 +1,191 @@
+CCS PCM C Compiler, Version 5.025, 30560               11-mai-22 19:32
+
+               Filename:   C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista C\Questão 13\MPLAB\Questão 13.lst
+
+               ROM used:   111 words (1%)
+                           Largest free fragment is 2048
+               RAM used:   13 (4%) at main() level
+                           13 (4%) worst case
+               Stack used: 0 locations
+               Stack size: 7
+
+*
+0000:  NOP
+0001:  MOVLW  00
+0002:  MOVWF  0A
+0003:  GOTO   004
+.................... /* 
+.................... Discente: Nilo Rodrigues Alves Filho 
+.................... Questão 13: 
+.................... Faça um programa para gerar um sinal PWM em 20kHz de frequência no pino RC1, no qual o seu duty varie conforme a largura de um pulso, conectado no pino RC2 do microcontrolador. 
+....................  
+.................... */ 
+....................  
+.................... #include <16f877a.h> 
+.................... //////////// Standard Header file for the PIC16F877A device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2013 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F877A 
+....................  
+.................... #list 
+....................  
+.................... #include<regs_pic16f877a.h> 
+.................... // DEFS_877  
+.................... //  
+.................... // Standard definitions for PIC16F877  
+.................... //  
+.................... // Copyright, Peter H. Anderson, Baltimore, MD, June, '99  
+....................   
+.................... //#define byte int  
+....................  
+.................... //#byte PORTD = 0x08 
+.................... //#bit INTF = 0xb.1 
+....................  
+.................... #list  
+....................  
+....................  
+....................  
+.................... void main(){  
+0004:  MOVF   03,W
+0005:  ANDLW  1F
+0006:  MOVWF  03
+0007:  MOVLW  FF
+0008:  MOVWF  20
+0009:  BSF    03.5
+000A:  BSF    1F.0
+000B:  BSF    1F.1
+000C:  BSF    1F.2
+000D:  BCF    1F.3
+000E:  MOVLW  07
+000F:  MOVWF  1C
+0010:  BCF    03.7
+0011:  BCF    03.5
+0012:  CLRF   22
+0013:  MOVLW  01
+0014:  MOVWF  21
+.................... 	unsigned int16 captura = 1, Tempo, Tamanho; 
+....................  
+.................... 	setup_timer_2(T2_DIV_BY_1, 49,16);   
+0015:  MOVLW  78
+0016:  MOVWF  78
+0017:  IORLW  04
+0018:  MOVWF  12
+0019:  MOVLW  31
+001A:  BSF    03.5
+001B:  MOVWF  12
+....................   	setup_ccp2(CCP_PWM);                 
+001C:  BCF    03.5
+001D:  BCF    20.1
+001E:  MOVF   20,W
+001F:  BSF    03.5
+0020:  MOVWF  07
+0021:  BCF    03.5
+0022:  BCF    07.1
+0023:  MOVLW  0C
+0024:  MOVWF  1D
+....................   	set_pwm2_duty(0);   
+0025:  CLRF   1B
+....................   	setup_timer_1(T1_INTERNAL|T1_DIV_BY_1 );  
+0026:  MOVLW  85
+0027:  MOVWF  10
+....................   	setup_ccp1(CCP_CAPTURE_RE);  
+0028:  BSF    20.2
+0029:  MOVF   20,W
+002A:  BSF    03.5
+002B:  MOVWF  07
+002C:  BCF    03.5
+002D:  CLRF   17
+002E:  MOVLW  05
+002F:  MOVWF  17
+....................   	set_tris_c(0b00000100);   
+0030:  MOVLW  04
+0031:  BSF    03.5
+0032:  MOVWF  07
+0033:  BCF    03.5
+0034:  MOVWF  20
+....................   
+....................   	while(1){  
+....................  
+.................... 		if(ccp1if == 1 && captura == 1){  
+0035:  BTFSS  0C.2
+0036:  GOTO   044
+0037:  DECFSZ 21,W
+0038:  GOTO   044
+0039:  MOVF   22,F
+003A:  BTFSS  03.2
+003B:  GOTO   044
+....................         	 Tempo = ccp_1; 
+003C:  MOVF   16,W
+003D:  MOVWF  24
+003E:  MOVF   15,W
+003F:  MOVWF  23
+....................            	 ccp1if = 0; 
+0040:  BCF    0C.2
+....................              captura++; 
+0041:  INCF   21,F
+0042:  BTFSC  03.2
+0043:  INCF   22,F
+....................         } 
+....................         if(ccp1if == 1 && captura == 2){ 
+0044:  BTFSS  0C.2
+0045:  GOTO   06D
+0046:  MOVF   21,W
+0047:  SUBLW  02
+0048:  BTFSS  03.2
+0049:  GOTO   06D
+004A:  MOVF   22,F
+004B:  BTFSS  03.2
+004C:  GOTO   06D
+....................         	Tamanho = ccp_1-Tempo; 
+004D:  MOVF   23,W
+004E:  SUBWF  15,W
+004F:  MOVWF  25
+0050:  MOVF   16,W
+0051:  MOVWF  26
+0052:  MOVF   24,W
+0053:  BTFSS  03.0
+0054:  INCFSZ 24,W
+0055:  SUBWF  26,F
+....................             ccp1if = 0; 
+0056:  BCF    0C.2
+....................             captura = 1;  
+0057:  CLRF   22
+0058:  MOVLW  01
+0059:  MOVWF  21
+....................             set_pwm2_duty(Tamanho); 
+005A:  MOVF   26,W
+005B:  MOVWF  79
+005C:  MOVF   25,W
+005D:  MOVWF  78
+005E:  RRF    79,F
+005F:  RRF    78,F
+0060:  RRF    79,F
+0061:  RRF    78,F
+0062:  RRF    79,F
+0063:  MOVF   78,W
+0064:  MOVWF  1B
+0065:  RRF    79,F
+0066:  RRF    79,W
+0067:  ANDLW  30
+0068:  MOVWF  77
+0069:  MOVF   1D,W
+006A:  ANDLW  CF
+006B:  IORWF  77,W
+006C:  MOVWF  1D
+....................         } 
+006D:  GOTO   035
+....................     }        
+.................... } 
+006E:  GOTO   06E
+
+Configuration Fuses:
+   Word  1: 373B   RC NOWDT NOPUT NOBROWNOUT NOLVP NOCPD NOWRT DEBUG NOPROTECT
+
+   Some fuses have been forced to be compatible with the ICD debugger.

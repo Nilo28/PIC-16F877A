@@ -1,0 +1,14 @@
+[PROJECT]
+Target=Atividade 15.04 - Módulos CCP's.hex
+Processor_Text=PIC16F877A
+CCSVersion=5.025
+Compiler=PCM
+[Target Data]
+FileList=Atividade 15.04 - Módulos CCP's.c
+[Atividade 15.04 - Módulos CCP's.c]
+Type=4
+[mru-list]
+1=Atividade 15.04 - Módulos CCP's.c
+[Units]
+Count=1
+1=Atividade 15.04 - Módulos CCP's (main)

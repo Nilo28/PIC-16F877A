@@ -1,0 +1,11 @@
+ÀÄPratica_04__25_08
+   ÀÄMAIN  0/114  Ram=5
+      ÃÄ@cinit1  (Inline)  Ram=0
+      ÃÄ@delay_ms1  0/21  Ram=1
+      ÃÄ@delay_ms1  0/21  Ram=1
+      ÃÄAlteraDisplay  0/66  Ram=1
+      ³  ÀÄ@goto10575  0/14  Ram=0
+      ÃÄ@delay_ms1  0/21  Ram=1
+      ÃÄAlteraDisplay  0/66  Ram=1
+      ³  ÀÄ*
+      ÀÄ@delay_ms1  0/21  Ram=1

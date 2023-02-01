@@ -1,0 +1,172 @@
+CCS PCM C Compiler, Version 5.025, 30560               21-abr-22 19:40
+
+               Filename:   C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Projetos\Projetos C\Atividade 13.04 - CCP2\MPLAB\Atividade 13.04 - CCP2.lst
+
+               ROM used:   65 words (1%)
+                           Largest free fragment is 2048
+               RAM used:   7 (2%) at main() level
+                           7 (2%) worst case
+               Stack used: 0 locations
+               Stack size: 7
+
+*
+0000:  NOP
+0001:  MOVLW  00
+0002:  MOVWF  0A
+0003:  GOTO   004
+.................... /*Discente: Nilo Rodrigues Alves Filho  
+.................... Fazer um código em C para fazer com que o CCP2 opere no modo de captura para medir o período de um sinal de 100 us.  
+.................... Se este período de 100 us for detectado, o estado do pino RC0 da porta C, que estava inicialmente em nível baixo, é colocado em nível alto. 
+.................... Vale como presença do dia 13. 
+....................  
+.................... Considerações: 
+.................... CCP2 -> RC1 
+.................... */ 
+....................  
+.................... #include <16F877A.h> 
+.................... //////////// Standard Header file for the PIC16F877A device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2013 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F877A 
+....................  
+.................... #list 
+....................  
+.................... #include "regs_pic16F877A.h" 
+.................... // DEFS_877  
+.................... //  
+.................... // Standard definitions for PIC16F877  
+.................... //  
+.................... // Copyright, Peter H. Anderson, Baltimore, MD, June, '99  
+....................   
+.................... //#define byte int  
+....................  
+.................... //#byte PORTD = 0x08 
+.................... //#bit INTF = 0xb.1 
+....................  
+.................... #list  
+....................  
+....................  
+....................  
+.................... unsigned int Cont = 0;		// Variável para indentificar se já foi detectada borda de subida 
+.................... unsigned int Tempo = 0;		// Variável para armazenar o tempo 
+....................  
+....................  
+.................... void main(){ 
+0004:  MOVF   03,W
+0005:  ANDLW  1F
+0006:  MOVWF  03
+0007:  CLRF   20
+0008:  CLRF   21
+0009:  BSF    03.5
+000A:  BSF    1F.0
+000B:  BSF    1F.1
+000C:  BSF    1F.2
+000D:  BCF    1F.3
+000E:  MOVLW  07
+000F:  MOVWF  1C
+0010:  BCF    03.7
+....................    // Configurando Porta C 
+.................... 	TRISC = 0x02;					// Habilita RC1 como entrada e RC0 como saída 
+0011:  MOVLW  02
+0012:  MOVWF  07
+.................... 	PORTC = 0x00;					// Inicializa os pinos de saída em nível lógico baixo 
+0013:  BCF    03.5
+0014:  CLRF   07
+....................  
+....................    // Configurando CCP2 
+.................... 	CCP2CON = 0x05;					// Modo de captura; 1 transição de sub. 
+0015:  MOVLW  05
+0016:  MOVWF  1D
+.................... 	CCP2IE = 1;						// Habilita interrupção	do CCP2	 
+0017:  BSF    03.5
+0018:  BSF    0D.0
+.................... 	PIR2 = 0x00;					// Limpa a flag 
+0019:  BCF    03.5
+001A:  CLRF   0D
+.................... 	 
+....................    // Configurando Timer1 
+.................... 	INTCON = 0x90;					// Habilita as interrupções globais; Desabilita interrupção RB0 
+001B:  MOVLW  90
+001C:  MOVWF  0B
+.................... 	T1CON = 0x10;					// Modo Temporizador; Timer desligado ; prescaler 1:2 
+001D:  MOVLW  10
+001E:  MOVWF  10
+.................... 	TMR1IE = 0;						// Desabilita interrupção do Timer0 
+001F:  BSF    03.5
+0020:  BCF    0C.0
+.................... 	TMR1L = 0x00; 					// Inicializa a contagem no zero; 
+0021:  BCF    03.5
+0022:  CLRF   0E
+.................... 	TMR1H = 0x00;					// Inicializa a contagem no zero; 
+0023:  CLRF   0F
+....................  
+....................  
+.................... 	while(1){	// LOOP infinito (início) 
+....................  
+.................... 		if(CCP2IF){				// Condição detecção da borda de subida 
+0024:  BTFSS  0D.0
+0025:  GOTO   03F
+.................... 			if(Cont == 0){			// Primeira borda de subida										 
+0026:  MOVF   20,F
+0027:  BTFSS  03.2
+0028:  GOTO   02D
+.................... 				TMR1ON = 1;			// Inicia o Timer		 
+0029:  BSF    10.0
+.................... 				CCP2IF = 0;			// Limpa a flag 
+002A:  BCF    0D.0
+.................... 				Cont++;				// Contabiliza a borda de subida				 
+002B:  INCF   20,F
+.................... 			} 
+002C:  GOTO   03F
+.................... 			else if(Cont == 1){					// Segunda borda de subida 
+002D:  DECFSZ 20,W
+002E:  GOTO   03F
+.................... 				TMR1ON = 0;							// Desliga o timer 
+002F:  BCF    10.0
+.................... 				Tempo = TMR1L + (TMR1H << 8);		// Armazena na variável o valor do Timer 
+0030:  MOVLW  00
+0031:  ADDWF  0E,W
+0032:  MOVWF  21
+.................... 				CCP2IF = 0;							// Limpa a flag 
+0033:  BCF    0D.0
+.................... 				TMR1H = 0;							// Reinicia a contagem do tempo 
+0034:  CLRF   0F
+.................... 				TMR1L = 0;							// Reinicia a contagem do tempo 
+0035:  CLRF   0E
+.................... 				Cont = 0;							// Reinicia a contagem da borda de subida 
+0036:  CLRF   20
+.................... 			   // 250 equivale a 100us 
+.................... 				if(Tempo == 250){					// Condição igual a 100us 
+0037:  MOVF   21,W
+0038:  SUBLW  FA
+0039:  BTFSC  03.2
+.................... 					portc0 = 1;							// Pino RC0 nível alto 
+003A:  BSF    07.0
+.................... 				} 
+.................... 				if(Tempo != 250){					// Condição diferente de 100us 
+003B:  MOVF   21,W
+003C:  SUBLW  FA
+003D:  BTFSS  03.2
+.................... 					portc0 = 0;							// Pino RC0 nível baixo 
+003E:  BCF    07.0
+.................... 				} 
+.................... 			} 
+.................... 					 
+.................... 		} 
+003F:  GOTO   024
+.................... 	 
+.................... 	}	// LOOP infinito (fim) 
+.................... } 
+0040:  GOTO   040
+
+Configuration Fuses:
+   Word  1: 373B   RC NOWDT NOPUT NOBROWNOUT NOLVP NOCPD NOWRT DEBUG NOPROTECT
+
+   Some fuses have been forced to be compatible with the ICD debugger.

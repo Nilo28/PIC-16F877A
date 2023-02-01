@@ -1,0 +1,116 @@
+CCS PCM C Compiler, Version 5.025, 30560               11-mai-22 19:19
+
+               Filename:   C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista C\Questão 20\MPLAB\Questão 20.lst
+
+               ROM used:   25 words (0%)
+                           Largest free fragment is 2048
+               RAM used:   5 (1%) at main() level
+                           5 (1%) worst case
+               Stack used: 0 locations
+               Stack size: 7
+
+*
+0000:  NOP
+0001:  MOVLW  00
+0002:  MOVWF  0A
+0003:  GOTO   004
+.................... /* 
+.................... Discente: Nilo Rodrigues Alves Filho 
+.................... Questão 20: 
+.................... Faça um programa para configurar a porta serial do microcontrolador com os seguintes parâmetros:  
+.................... Baud rate: 9600 bps, 8 bits de dado, sem paridade e 1 stop bit, pino de transmissão RC6 e de recepção o RC7.  
+.................... Em seguida, crie uma função que receba dois vetores de inteiros, sendo os inteiros de 8 bits. 
+.................... O primeiro vetor, V1, tem sempre 2 bytes e o segundo vetor, V2, tem sempre 4 bytes.  
+.................... Na função, os dois bytes do vetor V1 são transmitidos pela porta serial e logo em seguida do envio desses bytes, a mesma função preenche o vetor V2 com os 4 primeiros bytes recebidos.  
+.................... Após isso, se a primeira posição do vetor 1 for igual a do vetor 2, então a função retorna 1, senão 0.  
+.................... Dica: Utilize ponteiro para apontar para cada vetor, ou vejam https://www.youtube.com/watch?v=SAhR1h3LpDY 
+....................  
+.................... */ 
+....................  
+.................... #include <16f877a.h> 
+.................... //////////// Standard Header file for the PIC16F877A device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2013 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F877A 
+....................  
+.................... #list 
+....................  
+.................... #include <regs_pic16f877a.h> 
+.................... // DEFS_877  
+.................... //  
+.................... // Standard definitions for PIC16F877  
+.................... //  
+.................... // Copyright, Peter H. Anderson, Baltimore, MD, June, '99  
+....................   
+.................... //#define byte int  
+....................  
+.................... //#byte PORTD = 0x08 
+.................... //#bit INTF = 0xb.1 
+....................  
+.................... #list  
+....................  
+....................  
+....................  
+.................... #use delay (clock = 20000000) 
+.................... #use rs232(baud = 9600, BITS = 8, PARITY = N, STOP = 1, xmit = PIN_C6,rcv = PIN_C7) 
+....................  
+.................... int Recb_Vet(unsigned int8 *Vetor_n1, int8 *Vetor_n2){ 
+....................     
+.................... 	int i, j, Valor; 
+....................     for (i=0; i<=1; i++){ 
+....................        printf("%u /n", Vetor_n1[i]); 
+....................     } 
+....................  
+....................     for (j = 0; j<=3;j++){ 
+....................        Vetor_n2[j] = getc();  
+....................     } 
+....................  
+....................     if (Vetor_n1[0] == Vetor_n2 [0]){ 
+....................      	Valor = 1; 
+....................     } 
+....................  
+....................     else{ 
+....................      	Valor = 0; 
+....................     } 
+....................     
+....................     return Valor; 
+.................... } 
+....................  
+.................... void main(){ 
+0004:  MOVF   03,W
+0005:  ANDLW  1F
+0006:  MOVWF  03
+0007:  MOVLW  81
+0008:  BSF    03.5
+0009:  MOVWF  19
+000A:  MOVLW  A6
+000B:  MOVWF  18
+000C:  MOVLW  90
+000D:  BCF    03.5
+000E:  MOVWF  18
+000F:  BSF    03.5
+0010:  BSF    1F.0
+0011:  BSF    1F.1
+0012:  BSF    1F.2
+0013:  BCF    1F.3
+0014:  MOVLW  07
+0015:  MOVWF  1C
+0016:  BCF    03.7
+....................  
+.................... 	while (TRUE){ 
+0017:  GOTO   017
+....................     } 
+.................... } 
+0018:  GOTO   018
+
+Configuration Fuses:
+   Word  1: 373B   RC NOWDT NOPUT NOBROWNOUT NOLVP NOCPD NOWRT DEBUG NOPROTECT
+
+   Some fuses have been forced to be compatible with the ICD debugger.

@@ -1,0 +1,116 @@
+CCS PCM C Compiler, Version 5.025, 30560               05-mai-22 14:01
+
+               Filename:   C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Projetos\Projetos C\Atividade 08.04 - Timer0\MPLAB\Atividade 08.04 - Timer0.lst
+
+               ROM used:   39 words (0%)
+                           Largest free fragment is 2048
+               RAM used:   5 (1%) at main() level
+                           5 (1%) worst case
+               Stack used: 0 locations
+               Stack size: 7
+
+*
+0000:  NOP
+0001:  MOVLW  00
+0002:  MOVWF  0A
+0003:  GOTO   004
+.................... /* Discente: Nilo Rodrigues Alves Filho 
+.................... Tarefa: Fazer um código em C para fazer com que o timer0 opere como contador por borda de descida.  
+.................... A cada 10 contagens o estado do pino RA0 da porta A é invertido de estado. 
+....................  
+.................... Vale como presença para o dia 08. 
+.................... */ 
+....................  
+.................... #include <16F877A.h> 
+.................... //////////// Standard Header file for the PIC16F877A device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2013 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F877A 
+....................  
+.................... #list 
+....................  
+.................... #include "regs_pic16F877A.h" 
+.................... // DEFS_877  
+.................... //  
+.................... // Standard definitions for PIC16F877  
+.................... //  
+.................... // Copyright, Peter H. Anderson, Baltimore, MD, June, '99  
+....................   
+.................... //#define byte int  
+....................  
+.................... //#byte PORTD = 0x08 
+.................... //#bit INTF = 0xb.1 
+....................  
+.................... #list  
+....................  
+....................  
+....................  
+.................... void main(){ 
+0004:  MOVF   03,W
+0005:  ANDLW  1F
+0006:  MOVWF  03
+0007:  BSF    03.5
+0008:  BSF    1F.0
+0009:  BSF    1F.1
+000A:  BSF    1F.2
+000B:  BCF    1F.3
+000C:  MOVLW  07
+000D:  MOVWF  1C
+000E:  BCF    03.7
+.................... 	 
+....................    //Configurando PortA 
+....................    	TRISA = 0x10; 				// Habilita RA4 como entrada e os demais pinos como saída 
+000F:  MOVLW  10
+0010:  MOVWF  05
+....................    	PORTA = 0x00;				// Inicializa todos os pinos de saída em nível baixo  
+0011:  BCF    03.5
+0012:  CLRF   05
+....................     
+....................    //Configurando o Timer0	 
+.................... 	OPTION_REG = 0x38;          // Modo Contador; Borda de desc.; Presc. Desabililitado  
+0013:  MOVLW  38
+0014:  BSF    03.5
+0015:  MOVWF  01
+.................... 	INTCON = 0x20;              // Habilita interrupção por estouro 
+0016:  MOVLW  20
+0017:  BCF    03.5
+0018:  MOVWF  0B
+.................... 	TMR0 = 0xF6;                // Inicia a contagem em 246 (10 contagens para o estouro) 
+0019:  MOVLW  F6
+001A:  MOVWF  01
+....................  
+....................    //LOOP infinito 
+.................... 	while(1){ 
+....................  
+.................... 		if(T0IF){                    // Condição flag de estouro 
+001B:  BTFSS  0B.2
+001C:  GOTO   025
+.................... 			output_toggle(pin_a0);   // Muda o estado do pino RA0 
+001D:  BSF    03.5
+001E:  BCF    05.0
+001F:  MOVLW  01
+0020:  BCF    03.5
+0021:  XORWF  05,F
+.................... 			TMR0 = 0xF6;             // Retorna a contagem para 246 
+0022:  MOVLW  F6
+0023:  MOVWF  01
+.................... 			T0IF = 0;				 // Limpa a flag de estouro 
+0024:  BCF    0B.2
+.................... 		 
+.................... 		} 
+0025:  GOTO   01B
+.................... 	} 
+.................... } 
+0026:  GOTO   026
+
+Configuration Fuses:
+   Word  1: 373B   RC NOWDT NOPUT NOBROWNOUT NOLVP NOCPD NOWRT DEBUG NOPROTECT
+
+   Some fuses have been forced to be compatible with the ICD debugger.

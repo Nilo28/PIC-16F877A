@@ -1,0 +1,573 @@
+CCS PCM C Compiler, Version 5.025, 22995               12-out-22 16:38
+
+               Filename:   C:\Users\nilof\OneDrive\Área de Trabalho\Lab Microcontroladores\Prática_05__01_09\MPLAB\Pratica_05__01_09.lst
+
+               ROM used:   390 words (5%)
+                           Largest free fragment is 2048
+               RAM used:   23 (6%) at main() level
+                           26 (7%) worst case
+               Stack used: 2 locations (1 in main + 1 for interrupts)
+               Stack size: 7
+
+*
+0000:  NOP
+0001:  MOVLW  00
+0002:  MOVWF  0A
+0003:  GOTO   09A
+0004:  MOVWF  7F
+0005:  SWAPF  03,W
+0006:  CLRF   03
+0007:  MOVWF  21
+0008:  MOVF   0A,W
+0009:  MOVWF  20
+000A:  CLRF   0A
+000B:  MOVF   04,W
+000C:  MOVWF  22
+000D:  MOVF   77,W
+000E:  MOVWF  23
+000F:  MOVF   78,W
+0010:  MOVWF  24
+0011:  MOVF   79,W
+0012:  MOVWF  25
+0013:  MOVF   7A,W
+0014:  MOVWF  26
+0015:  BCF    03.7
+0016:  BCF    03.5
+0017:  MOVLW  8C
+0018:  MOVWF  04
+0019:  BTFSS  00.0
+001A:  GOTO   01D
+001B:  BTFSC  0C.0
+001C:  GOTO   02E
+001D:  MOVF   22,W
+001E:  MOVWF  04
+001F:  MOVF   23,W
+0020:  MOVWF  77
+0021:  MOVF   24,W
+0022:  MOVWF  78
+0023:  MOVF   25,W
+0024:  MOVWF  79
+0025:  MOVF   26,W
+0026:  MOVWF  7A
+0027:  MOVF   20,W
+0028:  MOVWF  0A
+0029:  SWAPF  21,W
+002A:  MOVWF  03
+002B:  SWAPF  7F,F
+002C:  SWAPF  7F,W
+002D:  RETFIE
+002E:  BCF    0A.3
+002F:  BCF    0A.4
+0030:  GOTO   03F
+.................... /* Prática 05 - 01/09 
+.................... Grupo: 
+.................... - Antônio Gustavo da Silva Moura  
+.................... - Manoel Barroso da Silva Moura 
+.................... - Nilo Rodrigues Alves Filho 
+....................  
+.................... RB0 - LED -> Indica cronômetro ligado 
+.................... RB1 - Botão S1 -> Continue/Pause 
+.................... RB2 - Botão S2 -> Reset 
+....................  
+.................... PORTD -> Display de 7 segmentos 
+....................  
+.................... Timer1 estouro a cada 250ms (clock interno; presc. 1:8) 
+.................... */ 
+....................  
+.................... #include <16f877a.h> 
+.................... //////////// Standard Header file for the PIC16F877A device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2013 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F877A 
+0031:  BCF    0A.0
+0032:  BCF    0A.1
+0033:  BCF    0A.2
+0034:  ADDWF  02,F
+0035:  RETLW  3F
+0036:  RETLW  06
+0037:  RETLW  5B
+0038:  RETLW  4F
+0039:  RETLW  66
+003A:  RETLW  6D
+003B:  RETLW  7D
+003C:  RETLW  07
+003D:  RETLW  7F
+003E:  RETLW  6F
+*
+0075:  CLRF   78
+0076:  CLRF   79
+0077:  CLRF   77
+0078:  CLRF   7A
+0079:  MOVF   33,W
+007A:  BTFSS  03.2
+007B:  GOTO   07F
+007C:  MOVF   32,W
+007D:  BTFSC  03.2
+007E:  GOTO   099
+007F:  MOVLW  10
+0080:  MOVWF  34
+0081:  BCF    03.0
+0082:  RLF    30,F
+0083:  RLF    31,F
+0084:  RLF    77,F
+0085:  RLF    7A,F
+0086:  MOVF   33,W
+0087:  SUBWF  7A,W
+0088:  BTFSS  03.2
+0089:  GOTO   08C
+008A:  MOVF   32,W
+008B:  SUBWF  77,W
+008C:  BTFSS  03.0
+008D:  GOTO   095
+008E:  MOVF   32,W
+008F:  SUBWF  77,F
+0090:  BTFSS  03.0
+0091:  DECF   7A,F
+0092:  MOVF   33,W
+0093:  SUBWF  7A,F
+0094:  BSF    03.0
+0095:  RLF    78,F
+0096:  RLF    79,F
+0097:  DECFSZ 34,F
+0098:  GOTO   081
+0099:  RETURN
+....................  
+.................... #list 
+....................  
+.................... #include "regs_pic16f877a.h" 
+.................... // DEFS_877  
+.................... //  
+.................... // Standard definitions for PIC16F877  
+.................... //  
+.................... // Copyright, Peter H. Anderson, Baltimore, MD, June, '99  
+....................   
+.................... //#define byte int  
+....................  
+.................... //#byte PORTD = 0x08 
+.................... //#bit INTF = 0xb.1 
+....................  
+.................... #list  
+....................  
+....................  
+....................  
+.................... #use delay(clock = 4000000)	//Valor do clock 
+*
+0060:  MOVLW  30
+0061:  MOVWF  04
+0062:  BCF    03.7
+0063:  MOVF   00,W
+0064:  BTFSC  03.2
+0065:  GOTO   074
+0066:  MOVLW  01
+0067:  MOVWF  78
+0068:  CLRF   77
+0069:  DECFSZ 77,F
+006A:  GOTO   069
+006B:  DECFSZ 78,F
+006C:  GOTO   068
+006D:  MOVLW  4A
+006E:  MOVWF  77
+006F:  DECFSZ 77,F
+0070:  GOTO   06F
+0071:  GOTO   072
+0072:  DECFSZ 00,F
+0073:  GOTO   066
+0074:  RETURN
+.................... #bit chaveS1 = PORTB.1		//Botão pause/continue 	 
+.................... #bit chaveS2 = PORTB.2		//Botão reset 
+.................... #Define press 0				//Valor na porta quando botão pressionado 
+.................... #Define liber 1				//Valor na porta quando botão liberado 
+....................  
+.................... byte const Display[10] = {0x3F,0x06,0x5B,0x4F,0x66,0x6D,0x7D,0x07,0x7F,0x6F};  //Matriz com os números relativos aos segmentos 
+....................  
+.................... //Variáveis 
+.................... unsigned int16 DisplayT = 0;			//Variável para o valor total 
+.................... unsigned int16 aux = 0;					//Variável auxiliar para cálculo das unidades, dezenas, centenas e unidades de milhar 
+.................... unsigned int UnidadeD = 0;				//Variável para a unidade 
+.................... unsigned int DezenaD = 0;				//Variável para a dezena  
+.................... unsigned int CentenaD = 0;				//Variável para a centena 
+.................... unsigned int MilharD = 0;				//Variável para a unidade de milhar 
+....................  
+.................... //Flags 
+.................... int1 controleS1 = 0;					//Flag botão pause/continue 
+.................... int1 controleS2 = 0;					//Flag botão reset 
+.................... int1 button_mode = 0;					//Flag modo botão pause/continue	0 -> Pausado, 1 -> Rodando 
+....................  
+.................... //Interrupção Timer1 
+.................... #INT_TIMER1 
+.................... void IntTimer1(){ 
+.................... 	set_timer1(34286); 
+*
+003F:  CLRF   0E
+0040:  MOVLW  85
+0041:  MOVWF  0F
+0042:  MOVLW  EE
+0043:  MOVWF  0E
+.................... 	if(DisplayT < 9999){ 
+0044:  MOVF   28,W
+0045:  SUBLW  27
+0046:  BTFSS  03.0
+0047:  GOTO   052
+0048:  BTFSS  03.2
+0049:  GOTO   04E
+004A:  MOVF   27,W
+004B:  SUBLW  0E
+004C:  BTFSS  03.0
+004D:  GOTO   052
+.................... 		DisplayT++; 
+004E:  INCF   27,F
+004F:  BTFSC  03.2
+0050:  INCF   28,F
+.................... 	} 
+0051:  GOTO   05C
+.................... 	else if(DisplayT == 9999){ 
+0052:  MOVF   27,W
+0053:  SUBLW  0F
+0054:  BTFSS  03.2
+0055:  GOTO   05C
+0056:  MOVF   28,W
+0057:  SUBLW  27
+0058:  BTFSS  03.2
+0059:  GOTO   05C
+.................... 		DisplayT = 0; 
+005A:  CLRF   28
+005B:  CLRF   27
+.................... 	}	 
+005C:  BCF    0C.0
+005D:  BCF    0A.3
+005E:  BCF    0A.4
+005F:  GOTO   01D
+.................... }	 
+....................  
+.................... //FUNÇÃO PRINCIPAL 
+.................... void main(){ 
+*
+009A:  MOVF   03,W
+009B:  ANDLW  1F
+009C:  MOVWF  03
+009D:  CLRF   28
+009E:  CLRF   27
+009F:  CLRF   2A
+00A0:  CLRF   29
+00A1:  CLRF   2B
+00A2:  CLRF   2C
+00A3:  CLRF   2D
+00A4:  CLRF   2E
+00A5:  BCF    2F.0
+00A6:  BCF    2F.1
+00A7:  BCF    2F.2
+00A8:  BSF    03.5
+00A9:  BSF    1F.0
+00AA:  BSF    1F.1
+00AB:  BSF    1F.2
+00AC:  BCF    1F.3
+00AD:  MOVLW  07
+00AE:  MOVWF  1C
+00AF:  BCF    03.7
+.................... 	//Entradas e saídas 
+.................... 	trisb0 = 0;			//RB0 saída (LED) 
+00B0:  BCF    06.0
+.................... 	trisb1 = 1;			//RB1 entrada (Botão S1) 
+00B1:  BSF    06.1
+.................... 	trisb2 = 1;	 		//RB2 entrada (Botão S2) 
+00B2:  BSF    06.2
+.................... 	set_tris_d(0x00);	//PortD saída (Display) 
+00B3:  MOVLW  00
+00B4:  MOVWF  08
+.................... 	 
+.................... 	output_low(pin_b0);	//Valor inicial do LED de indicação 
+00B5:  BCF    06.0
+00B6:  BCF    03.5
+00B7:  BCF    06.0
+.................... 	 
+.................... 	//Habilitando interrupções 
+.................... 	enable_interrupts(GLOBAL); 
+00B8:  MOVLW  C0
+00B9:  IORWF  0B,F
+.................... 	enable_interrupts(INT_TIMER1); 
+00BA:  BSF    03.5
+00BB:  BSF    0C.0
+.................... 	 
+.................... 	//Timer1	 
+.................... 	setup_timer_1(T1_INTERNAL|T1_DIV_BY_8);	 
+00BC:  MOVLW  B5
+00BD:  BCF    03.5
+00BE:  MOVWF  10
+.................... 	tmr1on = 0;									// Inicia desligado 
+00BF:  BCF    10.0
+.................... 	set_timer1(34286); 
+00C0:  CLRF   0E
+00C1:  MOVLW  85
+00C2:  MOVWF  0F
+00C3:  MOVLW  EE
+00C4:  MOVWF  0E
+.................... //Gustavo		 
+.................... 	while (true){		//LOOP infinito 
+.................... 		 
+.................... 	//Botão Pause/Continue	 
+.................... 		if(chaveS1 == press && controleS1 == 0){ 
+00C5:  BTFSC  06.1
+00C6:  GOTO   0DF
+00C7:  BTFSC  2F.0
+00C8:  GOTO   0DF
+.................... 			controleS1 = 1;			//Flag de botão ainda pressionado 
+00C9:  BSF    2F.0
+.................... 			 
+.................... 			if(button_mode == 0){		//Continue 
+00CA:  BTFSC  2F.2
+00CB:  GOTO   0D3
+.................... 				tmr1on = 1;				//Liga o timer 
+00CC:  BSF    10.0
+.................... 			 	output_high(pin_b0);	//Liga o led de indicação 
+00CD:  BSF    03.5
+00CE:  BCF    06.0
+00CF:  BCF    03.5
+00D0:  BSF    06.0
+.................... 			 	button_mode = 1;		//Sinaliza na flag o modo 'continue' 
+00D1:  BSF    2F.2
+.................... 			} 
+00D2:  GOTO   0DB
+.................... 			else if(button_mode == 1){	//Pause 
+00D3:  BTFSS  2F.2
+00D4:  GOTO   0DB
+.................... 				tmr1on = 0;				//Desliga o timer 
+00D5:  BCF    10.0
+.................... 				output_low(pin_b0);		//Desliga o led de indicação 
+00D6:  BSF    03.5
+00D7:  BCF    06.0
+00D8:  BCF    03.5
+00D9:  BCF    06.0
+.................... 				button_mode = 0;		//Sinaliza na flag o modo 'pause' 
+00DA:  BCF    2F.2
+.................... 			}					 
+.................... 			Delay_ms(100);	//Delay para tratar bouncing 
+00DB:  MOVLW  64
+00DC:  MOVWF  30
+00DD:  CALL   060
+.................... 		} 
+00DE:  GOTO   0E3
+.................... 		else if(chaveS1 == liber && controleS1 == 1){ 
+00DF:  BTFSS  06.1
+00E0:  GOTO   0E3
+00E1:  BTFSC  2F.0
+.................... 			controleS1 = 0;			//Flag de botão liberado 
+00E2:  BCF    2F.0
+.................... 		} 
+.................... 		 
+.................... 	//Botão Reset 
+.................... 		if(chaveS2 == press && controleS2 == 0){ 
+00E3:  BTFSC  06.2
+00E4:  GOTO   0EE
+00E5:  BTFSC  2F.1
+00E6:  GOTO   0EE
+.................... 			controleS2 = 1;		//Flag de botão ainda pressionado 
+00E7:  BSF    2F.1
+.................... 			DisplayT = 0;		//Reseta o valor do cronômetro 
+00E8:  CLRF   28
+00E9:  CLRF   27
+.................... 			Delay_ms(100);		//Delay para tratar bouncing 
+00EA:  MOVLW  64
+00EB:  MOVWF  30
+00EC:  CALL   060
+.................... 		} 
+00ED:  GOTO   0F2
+.................... 		else if(chaveS2 == liber && controleS2 == 1){ 
+00EE:  BTFSS  06.2
+00EF:  GOTO   0F2
+00F0:  BTFSC  2F.1
+.................... 			controleS2 = 0;		//Flag de botão liberado 
+00F1:  BCF    2F.1
+.................... 		} 
+.................... //Manoel 
+.................... 	//Calculando o valor de cada display 
+.................... 		MilharD = DisplayT / 1000;		//Valor das unidades de milhar 
+00F2:  MOVF   28,W
+00F3:  MOVWF  31
+00F4:  MOVF   27,W
+00F5:  MOVWF  30
+00F6:  MOVLW  03
+00F7:  MOVWF  33
+00F8:  MOVLW  E8
+00F9:  MOVWF  32
+00FA:  CALL   075
+00FB:  MOVF   78,W
+00FC:  MOVWF  2E
+.................... 		aux = DisplayT % 1000;			 
+00FD:  MOVF   28,W
+00FE:  MOVWF  31
+00FF:  MOVF   27,W
+0100:  MOVWF  30
+0101:  MOVLW  03
+0102:  MOVWF  33
+0103:  MOVLW  E8
+0104:  MOVWF  32
+0105:  CALL   075
+0106:  MOVF   77,W
+0107:  MOVWF  29
+0108:  MOVF   7A,W
+0109:  MOVWF  2A
+.................... 		CentenaD = aux / 100;			//Valor das centenas 
+010A:  MOVF   2A,W
+010B:  MOVWF  31
+010C:  MOVF   29,W
+010D:  MOVWF  30
+010E:  CLRF   33
+010F:  MOVLW  64
+0110:  MOVWF  32
+0111:  CALL   075
+0112:  MOVF   78,W
+0113:  MOVWF  2D
+.................... 		aux = aux % 100; 
+0114:  MOVF   2A,W
+0115:  MOVWF  31
+0116:  MOVF   29,W
+0117:  MOVWF  30
+0118:  CLRF   33
+0119:  MOVLW  64
+011A:  MOVWF  32
+011B:  CALL   075
+011C:  MOVF   77,W
+011D:  MOVWF  29
+011E:  MOVF   7A,W
+011F:  MOVWF  2A
+.................... 		DezenaD = aux / 10;		  		//Valor das dezenas 
+0120:  MOVF   2A,W
+0121:  MOVWF  31
+0122:  MOVF   29,W
+0123:  MOVWF  30
+0124:  CLRF   33
+0125:  MOVLW  0A
+0126:  MOVWF  32
+0127:  CALL   075
+0128:  MOVF   78,W
+0129:  MOVWF  2C
+.................... 		aux = aux % 10; 
+012A:  MOVF   2A,W
+012B:  MOVWF  31
+012C:  MOVF   29,W
+012D:  MOVWF  30
+012E:  CLRF   33
+012F:  MOVLW  0A
+0130:  MOVWF  32
+0131:  CALL   075
+0132:  MOVF   77,W
+0133:  MOVWF  29
+0134:  MOVF   7A,W
+0135:  MOVWF  2A
+.................... 		UnidadeD = aux;					//Valor das unidades 
+0136:  MOVF   29,W
+0137:  MOVWF  2B
+.................... 		 
+.................... 	//Alterando o valor do display		 
+.................... 		output_d(Display[UnidadeD]);	 
+0138:  MOVF   2B,W
+0139:  CALL   031
+013A:  MOVWF  30
+013B:  BSF    03.5
+013C:  CLRF   08
+013D:  BCF    03.5
+013E:  MOVF   30,W
+013F:  MOVWF  08
+.................... 		output_high(pin_b4); 
+0140:  BSF    03.5
+0141:  BCF    06.4
+0142:  BCF    03.5
+0143:  BSF    06.4
+.................... 		Delay_ms(5); 			 
+0144:  MOVLW  05
+0145:  MOVWF  30
+0146:  CALL   060
+.................... 		output_low(pin_b4); 
+0147:  BSF    03.5
+0148:  BCF    06.4
+0149:  BCF    03.5
+014A:  BCF    06.4
+.................... 				 
+.................... 		output_d(Display[DezenaD]); 
+014B:  MOVF   2C,W
+014C:  CALL   031
+014D:  MOVWF  30
+014E:  BSF    03.5
+014F:  CLRF   08
+0150:  BCF    03.5
+0151:  MOVF   30,W
+0152:  MOVWF  08
+.................... 		output_high(pin_b5);		 
+0153:  BSF    03.5
+0154:  BCF    06.5
+0155:  BCF    03.5
+0156:  BSF    06.5
+.................... 		Delay_ms(5);		 
+0157:  MOVLW  05
+0158:  MOVWF  30
+0159:  CALL   060
+.................... 		output_low(pin_b5); 
+015A:  BSF    03.5
+015B:  BCF    06.5
+015C:  BCF    03.5
+015D:  BCF    06.5
+.................... 				 
+.................... 		output_d(Display[CentenaD]); 
+015E:  MOVF   2D,W
+015F:  CALL   031
+0160:  MOVWF  30
+0161:  BSF    03.5
+0162:  CLRF   08
+0163:  BCF    03.5
+0164:  MOVF   30,W
+0165:  MOVWF  08
+.................... 		output_high(pin_b6);		 
+0166:  BSF    03.5
+0167:  BCF    06.6
+0168:  BCF    03.5
+0169:  BSF    06.6
+.................... 		Delay_ms(5);		 
+016A:  MOVLW  05
+016B:  MOVWF  30
+016C:  CALL   060
+.................... 		output_low(pin_b6); 
+016D:  BSF    03.5
+016E:  BCF    06.6
+016F:  BCF    03.5
+0170:  BCF    06.6
+.................... 		 
+.................... 		output_d(Display[MilharD]);		 
+0171:  MOVF   2E,W
+0172:  CALL   031
+0173:  MOVWF  30
+0174:  BSF    03.5
+0175:  CLRF   08
+0176:  BCF    03.5
+0177:  MOVF   30,W
+0178:  MOVWF  08
+.................... 		output_high(pin_b7);		 
+0179:  BSF    03.5
+017A:  BCF    06.7
+017B:  BCF    03.5
+017C:  BSF    06.7
+.................... 		Delay_ms(5);		 
+017D:  MOVLW  05
+017E:  MOVWF  30
+017F:  CALL   060
+.................... 		output_low(pin_b7); 
+0180:  BSF    03.5
+0181:  BCF    06.7
+0182:  BCF    03.5
+0183:  BCF    06.7
+0184:  GOTO   0C5
+.................... 	 
+.................... 	}	 
+.................... } 
+0185:  GOTO   185
+
+Configuration Fuses:
+   Word  1: 373B   RC NOWDT NOPUT NOBROWNOUT NOLVP NOCPD NOWRT DEBUG NOPROTECT
+
+   Some fuses have been forced to be compatible with the ICD debugger.

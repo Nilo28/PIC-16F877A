@@ -1,0 +1,36 @@
+MPLINK 4.37, Linker
+Linker Map File - Created Mon May 09 00:12:52 2022
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x00002a
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000014      
+            21 out of 8453 program addresses used, program memory utilization is 0%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                      FIM   0x000015    program     static C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista Assembly\Questão 7\MPLAB\Questão 7.asm
+                   INICIO   0x000000    program     static C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista Assembly\Questão 7\MPLAB\Questão 7.asm
+                   REPETE   0x000006    program     static C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista Assembly\Questão 7\MPLAB\Questão 7.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                   INICIO   0x000000    program     static C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista Assembly\Questão 7\MPLAB\Questão 7.asm
+                   REPETE   0x000006    program     static C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista Assembly\Questão 7\MPLAB\Questão 7.asm
+                      FIM   0x000015    program     static C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista Assembly\Questão 7\MPLAB\Questão 7.asm
+
+

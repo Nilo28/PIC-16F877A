@@ -1,0 +1,14 @@
+[PROJECT]
+Target=Questão 10.hex
+Processor_Text=PIC16F877A
+CCSVersion=5.025
+Compiler=PCM
+[Target Data]
+FileList=Questão 10.c
+[Questão 10.c]
+Type=4
+[mru-list]
+1=Questão 10.c
+[Units]
+Count=1
+1=Questão 10 (main)

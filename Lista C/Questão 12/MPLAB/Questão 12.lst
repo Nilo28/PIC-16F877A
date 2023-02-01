@@ -1,0 +1,274 @@
+CCS PCM C Compiler, Version 5.025, 30560               11-mai-22 19:31
+
+               Filename:   C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista C\Questão 12\MPLAB\Questão 12.lst
+
+               ROM used:   171 words (2%)
+                           Largest free fragment is 2048
+               RAM used:   15 (4%) at main() level
+                           15 (4%) worst case
+               Stack used: 0 locations
+               Stack size: 7
+
+*
+0000:  NOP
+0001:  MOVLW  00
+0002:  MOVWF  0A
+0003:  GOTO   004
+.................... /* 
+.................... Discente: Nilo Rodrigues Alves Filho 
+.................... Questão 12: 
+.................... Escreva um programa em C para o PIC16F877A a fim de gerar um sinal PWM na frequência de 20 kHz.  
+.................... A cada 0,1 segundos, a razão cíclica é aumentada em 10 %.  
+.................... Quando for atingido o duty no tempo de 100 %, o duty reinicia em zero, repetindo o ciclo até 100%.  
+.................... No mesmo programa, faça a medição do tempo em nível alto do sinal PWM.  
+.................... Se este tempo for superior a 25 us, o estado do pino RD0 permanece em nível alto, caso contrário em nível baixo. 
+.................... */ 
+....................  
+.................... #include <16f877a.h> 
+.................... //////////// Standard Header file for the PIC16F877A device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2013 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F877A 
+....................  
+.................... #list 
+....................  
+.................... #include<regs_pic16f877a.h> 
+.................... // DEFS_877  
+.................... //  
+.................... // Standard definitions for PIC16F877  
+.................... //  
+.................... // Copyright, Peter H. Anderson, Baltimore, MD, June, '99  
+....................   
+.................... //#define byte int  
+....................  
+.................... //#byte PORTD = 0x08 
+.................... //#bit INTF = 0xb.1 
+....................  
+.................... #list  
+....................  
+....................  
+....................  
+.................... #bit TMR2IF = 0x0c.1 
+.................... #bit CCP2IF = 0x0d.0 
+....................  
+.................... void main (){unsigned int8 cont = 0; int1 p_cap; unsigned int16 Duty_Cycle, Tempo, Tempo_2;       
+0004:  MOVF   03,W
+0005:  ANDLW  1F
+0006:  MOVWF  03
+0007:  MOVLW  FF
+0008:  MOVWF  20
+0009:  BSF    03.5
+000A:  BSF    1F.0
+000B:  BSF    1F.1
+000C:  BSF    1F.2
+000D:  BCF    1F.3
+000E:  MOVLW  07
+000F:  MOVWF  1C
+0010:  BCF    03.7
+0011:  BCF    03.5
+0012:  CLRF   21
+.................... 	Duty_Cycle = 0; 
+0013:  CLRF   24
+0014:  CLRF   23
+.................... 	p_cap = 1; 
+0015:  BSF    22.0
+.................... 	 
+.................... 	SETUP_TIMER_2(T2_DIV_BY_1,249,8,);   
+0016:  MOVLW  38
+0017:  MOVWF  78
+0018:  IORLW  04
+0019:  MOVWF  12
+001A:  MOVLW  F9
+001B:  BSF    03.5
+001C:  MOVWF  12
+.................... 	SETUP_CCP1(CCP_PWM); 
+001D:  BCF    03.5
+001E:  BCF    20.2
+001F:  MOVF   20,W
+0020:  BSF    03.5
+0021:  MOVWF  07
+0022:  BCF    03.5
+0023:  BCF    07.2
+0024:  MOVLW  0C
+0025:  MOVWF  17
+.................... 	SETUP_CCP2(CCP_CAPTURE_RE); 
+0026:  BSF    20.1
+0027:  MOVF   20,W
+0028:  BSF    03.5
+0029:  MOVWF  07
+002A:  BCF    03.5
+002B:  CLRF   1D
+002C:  MOVLW  05
+002D:  MOVWF  1D
+.................... 	SET_PWM1_DUTY(Duty_Cycle); 
+002E:  MOVF   24,W
+002F:  MOVWF  79
+0030:  MOVF   23,W
+0031:  MOVWF  78
+0032:  RRF    79,F
+0033:  RRF    78,F
+0034:  RRF    79,F
+0035:  RRF    78,F
+0036:  RRF    79,F
+0037:  MOVF   78,W
+0038:  MOVWF  15
+0039:  RRF    79,F
+003A:  RRF    79,W
+003B:  ANDLW  30
+003C:  MOVWF  77
+003D:  MOVF   17,W
+003E:  ANDLW  CF
+003F:  IORWF  77,W
+0040:  MOVWF  17
+.................... 	 
+.................... 	while(1){ 
+.................... 		if(TMR2IF == 1){ 
+0041:  BTFSS  7F.0
+0042:  GOTO   06E
+.................... 			TMR2IF = 0;  
+0043:  BCF    7F.0
+.................... 			cont++; 
+0044:  INCF   21,F
+.................... 			if (cont == 400){ 
+0045:  MOVF   21,W
+0046:  SUBLW  90
+0047:  BTFSS  03.2
+0048:  GOTO   06E
+.................... 				cont = 0;  
+0049:  CLRF   21
+.................... 				Duty_Cycle = Duty_Cycle + 100; 
+004A:  MOVLW  64
+004B:  ADDWF  23,F
+004C:  BTFSC  03.0
+004D:  INCF   24,F
+.................... 				if(Duty_Cycle > 1000){ 
+004E:  MOVF   24,W
+004F:  SUBLW  02
+0050:  BTFSC  03.0
+0051:  GOTO   05B
+0052:  XORLW  FF
+0053:  BTFSS  03.2
+0054:  GOTO   059
+0055:  MOVF   23,W
+0056:  SUBLW  E8
+0057:  BTFSC  03.0
+0058:  GOTO   05B
+.................... 					Duty_Cycle = 0; 
+0059:  CLRF   24
+005A:  CLRF   23
+.................... 				}  
+.................... 				SET_PWM1_DUTY(Duty_Cycle);        
+005B:  MOVF   24,W
+005C:  MOVWF  79
+005D:  MOVF   23,W
+005E:  MOVWF  78
+005F:  RRF    79,F
+0060:  RRF    78,F
+0061:  RRF    79,F
+0062:  RRF    78,F
+0063:  RRF    79,F
+0064:  MOVF   78,W
+0065:  MOVWF  15
+0066:  RRF    79,F
+0067:  RRF    79,W
+0068:  ANDLW  30
+0069:  MOVWF  77
+006A:  MOVF   17,W
+006B:  ANDLW  CF
+006C:  IORWF  77,W
+006D:  MOVWF  17
+.................... 			} 
+.................... 		}      
+.................... 		if(CCP2IF == 1){ 
+006E:  BTFSS  7F.0
+006F:  GOTO   0A9
+.................... 			if(p_cap == 1){ 
+0070:  BTFSS  22.0
+0071:  GOTO   07F
+.................... 				Tempo = CCP_2; 
+0072:  MOVF   1C,W
+0073:  MOVWF  26
+0074:  MOVF   1B,W
+0075:  MOVWF  25
+.................... 				SETUP_CCP2(CCP_CAPTURE_FE); 
+0076:  BSF    20.1
+0077:  MOVF   20,W
+0078:  BSF    03.5
+0079:  MOVWF  07
+007A:  BCF    03.5
+007B:  CLRF   1D
+007C:  MOVLW  04
+007D:  MOVWF  1D
+.................... 			}       
+007E:  GOTO   090
+.................... 			else{ 
+.................... 				Tempo_2 = CCP_2 - Tempo; 
+007F:  MOVF   25,W
+0080:  SUBWF  1B,W
+0081:  MOVWF  27
+0082:  MOVF   1C,W
+0083:  MOVWF  28
+0084:  MOVF   26,W
+0085:  BTFSS  03.0
+0086:  INCFSZ 26,W
+0087:  SUBWF  28,F
+.................... 				SETUP_CCP2(CCP_CAPTURE_RE); 
+0088:  BSF    20.1
+0089:  MOVF   20,W
+008A:  BSF    03.5
+008B:  MOVWF  07
+008C:  BCF    03.5
+008D:  CLRF   1D
+008E:  MOVLW  05
+008F:  MOVWF  1D
+.................... 			} 
+.................... 			CCP2IF = 0; 
+0090:  BCF    7F.0
+.................... 			p_cap = p_cap ^ 1;       
+0091:  MOVLW  00
+0092:  BTFSC  22.0
+0093:  MOVLW  01
+0094:  XORLW  01
+0095:  MOVWF  78
+0096:  BCF    22.0
+0097:  BTFSC  78.0
+0098:  BSF    22.0
+.................... 			if(Tempo_2 > 25){ 
+0099:  MOVF   28,F
+009A:  BTFSS  03.2
+009B:  GOTO   0A0
+009C:  MOVF   27,W
+009D:  SUBLW  19
+009E:  BTFSC  03.0
+009F:  GOTO   0A5
+.................... 				output_high(pin_d0); 
+00A0:  BSF    03.5
+00A1:  BCF    08.0
+00A2:  BCF    03.5
+00A3:  BSF    08.0
+.................... 			} 
+00A4:  GOTO   0A9
+.................... 			else{ 
+.................... 				output_low(pin_d0); 
+00A5:  BSF    03.5
+00A6:  BCF    08.0
+00A7:  BCF    03.5
+00A8:  BCF    08.0
+.................... 			}          
+.................... 		}        
+00A9:  GOTO   041
+.................... 	}        
+.................... } 
+00AA:  GOTO   0AA
+
+Configuration Fuses:
+   Word  1: 373B   RC NOWDT NOPUT NOBROWNOUT NOLVP NOCPD NOWRT DEBUG NOPROTECT
+
+   Some fuses have been forced to be compatible with the ICD debugger.

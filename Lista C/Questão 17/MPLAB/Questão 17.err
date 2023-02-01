@@ -1,0 +1,4 @@
+>>> Warning 203 "Questão 17.c" Line 20(1,1): Condition always TRUE
+      Memory usage:   ROM=18%      RAM=5% - 24%
+      0 Errors,  1 Warnings.
+Build Successful.

@@ -1,0 +1,285 @@
+CCS PCM C Compiler, Version 5.025, 30560               11-mai-22 19:23
+
+               Filename:   C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista C\Questão 1\MPLAB\Questão 1.lst
+
+               ROM used:   183 words (2%)
+                           Largest free fragment is 2048
+               RAM used:   16 (4%) at main() level
+                           20 (6%) worst case
+               Stack used: 1 locations
+               Stack size: 7
+
+*
+0000:  NOP
+0001:  MOVLW  00
+0002:  MOVWF  0A
+0003:  GOTO   019
+.................... /* 
+.................... Discente: Nilo Rodrigues Alves Filho 
+.................... Questão 1: 
+....................  Desenhe um circuito com o decodificador 7448 e um demultiplexador para acionar quatro displays de 7 segmentos de catodo comum, utilizando a porta D. 
+....................  A partir do desenho, faça o programa em C. 
+....................  
+.................... Observações: 
+.................... - O código simulará um cronômetro digital no formato (00:00); 
+.................... - Para o circuito, só poderá ser ligado um display por vez; 
+.................... - O demultiplexador escolherá qual display será usado; 
+.................... - Os valores serão mostrados na seguinte ordem: 
+.................... 	1º: Dezenas dos minutos	 
+.................... 	2º: Unidades dos minutos	 
+.................... 	3º: Dezenas dos segundos 
+.................... 	4º: Unidades dos Segundos 
+.................... */ 
+....................  
+.................... #include <16f877a.h> 
+.................... //////////// Standard Header file for the PIC16F877A device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2013 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F877A 
+....................  
+.................... #list 
+....................  
+....................  
+.................... #use delay(clock = 4M)  
+0004:  MOVLW  2E
+0005:  MOVWF  04
+0006:  BCF    03.7
+0007:  MOVF   00,W
+0008:  BTFSC  03.2
+0009:  GOTO   018
+000A:  MOVLW  01
+000B:  MOVWF  78
+000C:  CLRF   77
+000D:  DECFSZ 77,F
+000E:  GOTO   00D
+000F:  DECFSZ 78,F
+0010:  GOTO   00C
+0011:  MOVLW  4A
+0012:  MOVWF  77
+0013:  DECFSZ 77,F
+0014:  GOTO   013
+0015:  GOTO   016
+0016:  DECFSZ 00,F
+0017:  GOTO   00A
+0018:  RETURN
+.................... #define tempo 100		// Valor, em ms, do delay de atualização do cronômetro. 
+....................  
+.................... // Configurando as chaves enable do demultiplexador 
+.................... #define Display_dezena_min  output_bit( PIN_D4, 1); output_bit( PIN_D5, 1);		// 11 -> Seleciona o display das dezenas dos minutos	 
+.................... #define Display_unidade_min output_bit( PIN_D4, 0); output_bit( PIN_D5, 1);		// 01 -> Seleciona o display das unidades dos minutos	 
+.................... #define Display_dezena_segundo output_bit(PIN_D4,1); output_bit(PIN_D5,0);     		// 10 -> Seleciona o display das dezenas dos segundos 
+.................... #define Display_unidade_segundo output_bit(PIN_D4,0); output_bit(PIN_D5,0);			// 00 -> Seleciona o display das unidades dos segundos 
+....................  
+.................... byte display[10] = {0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09}; 			// Valores a serem mostrados no display  
+*
+0024:  BCF    03.5
+0025:  CLRF   20
+0026:  MOVLW  01
+0027:  MOVWF  21
+0028:  MOVLW  02
+0029:  MOVWF  22
+002A:  MOVLW  03
+002B:  MOVWF  23
+002C:  MOVLW  04
+002D:  MOVWF  24
+002E:  MOVLW  05
+002F:  MOVWF  25
+0030:  MOVLW  06
+0031:  MOVWF  26
+0032:  MOVLW  07
+0033:  MOVWF  27
+0034:  MOVLW  08
+0035:  MOVWF  28
+0036:  MOVLW  09
+0037:  MOVWF  29
+....................  
+.................... void main(){ 
+*
+0019:  MOVF   03,W
+001A:  ANDLW  1F
+001B:  MOVWF  03
+001C:  BSF    03.5
+001D:  BSF    1F.0
+001E:  BSF    1F.1
+001F:  BSF    1F.2
+0020:  BCF    1F.3
+0021:  MOVLW  07
+0022:  MOVWF  1C
+0023:  BCF    03.7
+.................... 	set_tris_d(0b00000000); 
+*
+0038:  MOVLW  00
+0039:  BSF    03.5
+003A:  MOVWF  08
+.................... 	ext_int_edge(L_TO_H);	 
+003B:  BSF    01.6
+.................... 														 
+.................... 	while(1){ 
+.................... 		int D_min = 0, U_min = 0, D_seg = 0, U_seg = 0; 
+003C:  BCF    03.5
+003D:  CLRF   2A
+003E:  CLRF   2B
+003F:  CLRF   2C
+0040:  CLRF   2D
+.................... 		 
+.................... 	    for(D_min = 0; D_min < 3; D_min++){						// Valor da dezenas dos minutos			 
+0041:  CLRF   2A
+0042:  MOVF   2A,W
+0043:  SUBLW  02
+0044:  BTFSS  03.0
+0045:  GOTO   0B5
+.................... 			for(U_min = 0; U_min < 4; U_min++){					// Valor da unid3ades dos minutos	 
+0046:  CLRF   2B
+0047:  MOVF   2B,W
+0048:  SUBLW  03
+0049:  BTFSS  03.0
+004A:  GOTO   0B3
+.................... 		         for(D_seg = 0; D_seg < 6;D_seg++){					// Valor da dezena dos segundos 
+004B:  CLRF   2C
+004C:  MOVF   2C,W
+004D:  SUBLW  05
+004E:  BTFSS  03.0
+004F:  GOTO   0B1
+.................... 			         for(U_seg = 0; U_seg < 10;U_seg++){			// Valor das unidade dos segundos 
+0050:  CLRF   2D
+0051:  MOVF   2D,W
+0052:  SUBLW  09
+0053:  BTFSS  03.0
+0054:  GOTO   0AF
+.................... 				          
+.................... 				         // Mostra o valor das dezenas dos minutos	 
+.................... 				         output_d(display[D_min]); 
+0055:  MOVLW  20
+0056:  ADDWF  2A,W
+0057:  MOVWF  04
+0058:  BCF    03.7
+0059:  MOVF   00,W
+005A:  MOVWF  2E
+005B:  BSF    03.5
+005C:  CLRF   08
+005D:  BCF    03.5
+005E:  MOVF   2E,W
+005F:  MOVWF  08
+.................... 				         Display_dezena_min; 
+0060:  BSF    08.4
+0061:  BSF    03.5
+0062:  BCF    08.4
+0063:  BCF    03.5
+0064:  BSF    08.5
+0065:  BSF    03.5
+0066:  BCF    08.5
+.................... 				         delay_ms(tempo); 
+0067:  MOVLW  64
+0068:  BCF    03.5
+0069:  MOVWF  2E
+006A:  CALL   004
+.................... 				          
+.................... 				         // Mostra o valor das unidades dos minutos	 
+.................... 				         output_d(display[U_min]); 
+006B:  MOVLW  20
+006C:  ADDWF  2B,W
+006D:  MOVWF  04
+006E:  BCF    03.7
+006F:  MOVF   00,W
+0070:  MOVWF  2E
+0071:  BSF    03.5
+0072:  CLRF   08
+0073:  BCF    03.5
+0074:  MOVF   2E,W
+0075:  MOVWF  08
+.................... 				         Display_unidade_min; 
+0076:  BCF    08.4
+0077:  BSF    03.5
+0078:  BCF    08.4
+0079:  BCF    03.5
+007A:  BSF    08.5
+007B:  BSF    03.5
+007C:  BCF    08.5
+.................... 				         delay_ms(tempo); 
+007D:  MOVLW  64
+007E:  BCF    03.5
+007F:  MOVWF  2E
+0080:  CALL   004
+.................... 				          
+.................... 				         // Mostra o valor das dezenas dos segundos 
+.................... 				         output_d(display[D_seg]); 
+0081:  MOVLW  20
+0082:  ADDWF  2C,W
+0083:  MOVWF  04
+0084:  BCF    03.7
+0085:  MOVF   00,W
+0086:  MOVWF  2E
+0087:  BSF    03.5
+0088:  CLRF   08
+0089:  BCF    03.5
+008A:  MOVF   2E,W
+008B:  MOVWF  08
+.................... 				         Display_dezena_segundo; 
+008C:  BSF    08.4
+008D:  BSF    03.5
+008E:  BCF    08.4
+008F:  BCF    03.5
+0090:  BCF    08.5
+0091:  BSF    03.5
+0092:  BCF    08.5
+.................... 				         delay_ms(tempo); 
+0093:  MOVLW  64
+0094:  BCF    03.5
+0095:  MOVWF  2E
+0096:  CALL   004
+.................... 				          
+.................... 				         // Mostra o valor das unidades dos segundos 
+.................... 				         output_d(display[U_seg]); 
+0097:  MOVLW  20
+0098:  ADDWF  2D,W
+0099:  MOVWF  04
+009A:  BCF    03.7
+009B:  MOVF   00,W
+009C:  MOVWF  2E
+009D:  BSF    03.5
+009E:  CLRF   08
+009F:  BCF    03.5
+00A0:  MOVF   2E,W
+00A1:  MOVWF  08
+.................... 				         Display_unidade_segundo; 
+00A2:  BCF    08.4
+00A3:  BSF    03.5
+00A4:  BCF    08.4
+00A5:  BCF    03.5
+00A6:  BCF    08.5
+00A7:  BSF    03.5
+00A8:  BCF    08.5
+.................... 				         delay_ms(tempo);      
+00A9:  MOVLW  64
+00AA:  BCF    03.5
+00AB:  MOVWF  2E
+00AC:  CALL   004
+00AD:  INCF   2D,F
+00AE:  GOTO   051
+.................... 		             }           
+00AF:  INCF   2C,F
+00B0:  GOTO   04C
+.................... 	             } 
+00B1:  INCF   2B,F
+00B2:  GOTO   047
+.................... 	         } 
+00B3:  INCF   2A,F
+00B4:  GOTO   042
+.................... 	    }           
+00B5:  GOTO   03D
+.................... 	     
+.................... 	} 
+.................... } 
+00B6:  GOTO   0B6
+
+Configuration Fuses:
+   Word  1: 373B   RC NOWDT NOPUT NOBROWNOUT NOLVP NOCPD NOWRT DEBUG NOPROTECT
+
+   Some fuses have been forced to be compatible with the ICD debugger.

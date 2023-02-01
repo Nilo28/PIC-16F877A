@@ -1,0 +1,14 @@
+[PROJECT]
+Target=Atividade 11.04 - Timer2.hex
+Processor_Text=PIC16F877A
+CCSVersion=5.025
+Compiler=PCM
+[Target Data]
+FileList=Atividade 11.04 - Timer2.c
+[Atividade 11.04 - Timer2.c]
+Type=4
+[mru-list]
+1=Atividade 11.04 - Timer2.c
+[Units]
+Count=1
+1=Atividade 11.04 - Timer2 (main)

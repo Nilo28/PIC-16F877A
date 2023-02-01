@@ -1,0 +1,40 @@
+MPLINK 4.37, Linker
+Linker Map File - Created Mon May 09 19:24:35 2022
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x00001e
+ .config_2007_QUESTãO 2.O       code   0x002007    program   0x000002
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x00000e      
+                            0x002007    0x002007      
+            16 out of 8453 program addresses used, program memory utilization is 0%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                      FIM   0x00000c    program     static C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista Assembly\Questão 2\MPLAB\Questão 2.asm
+                   INICIO   0x000007    program     static C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista Assembly\Questão 2\MPLAB\Questão 2.asm
+                     LOOP   0x000007    program     static C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista Assembly\Questão 2\MPLAB\Questão 2.asm
+                  pino_um   0x00000d    program     static C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista Assembly\Questão 2\MPLAB\Questão 2.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                   INICIO   0x000007    program     static C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista Assembly\Questão 2\MPLAB\Questão 2.asm
+                     LOOP   0x000007    program     static C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista Assembly\Questão 2\MPLAB\Questão 2.asm
+                      FIM   0x00000c    program     static C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista Assembly\Questão 2\MPLAB\Questão 2.asm
+                  pino_um   0x00000d    program     static C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista Assembly\Questão 2\MPLAB\Questão 2.asm
+
+

@@ -1,0 +1,41 @@
+ÀÄPratica_06__22_09
+   ÃÄMAIN  0/253  Ram=1
+   ³  ÃÄ@cinit1  (Inline)  Ram=0
+   ³  ÃÄinicializa_lcd  0/37  Ram=0
+   ³  ³  ÃÄcomando_lcd  0/13  Ram=1
+   ³  ³  ÃÄ@delay_ms1  0/24  Ram=1
+   ³  ³  ÃÄcomando_lcd  0/13  Ram=1
+   ³  ³  ÃÄcomando_lcd  0/13  Ram=1
+   ³  ³  ÃÄcomando_lcd  0/13  Ram=1
+   ³  ³  ÃÄlimpa_lcd  (Inline)  Ram=0
+   ³  ³  ³  ÃÄcomando_lcd  0/13  Ram=1
+   ³  ³  ³  ÀÄ@delay_ms1  0/24  Ram=1
+   ³  ³  ÃÄcomando_lcd  0/13  Ram=1
+   ³  ³  ÀÄcomando_lcd  0/13  Ram=1
+   ³  ÃÄtela_principal  0/116  Ram=0
+   ³  ³  ÃÄcomando_lcd  0/13  Ram=1
+   ³  ³  ÃÄ@PSTRINGC7_646  (Inline)  Ram=4
+   ³  ³  ³  ÃÄescreve_lcd  0/13  Ram=1
+   ³  ³  ³  ÀÄescreve_lcd  0/13  Ram=1
+   ³  ³  ÃÄcomando_lcd  0/13  Ram=1
+   ³  ³  ÃÄ@PRINTF_LU_646  0/99  Ram=9
+   ³  ³  ³  ÀÄescreve_lcd  0/13  Ram=1
+   ³  ³  ÃÄescreve_lcd  0/13  Ram=1
+   ³  ³  ÃÄcomando_lcd  0/13  Ram=1
+   ³  ³  ÀÄ@PRINTF_LU_646  0/99  Ram=9
+   ³  ³     ÀÄ*
+   ³  ÃÄ@ITOF  0/31  Ram=2
+   ³  ÃÄ@DIVFF  0/204  Ram=14
+   ³  ÃÄ@MULFF  0/119  Ram=13
+   ³  ÃÄ@SFTOI  0/33  Ram=4
+   ³  ÃÄtela_principal  0/116  Ram=0
+   ³  ³  ÀÄ*
+   ³  ÃÄle_dados  0/11  Ram=1
+   ³  ÃÄle_dados  0/11  Ram=1
+   ³  ÃÄatualiza_pwm  0/20  Ram=0
+   ³  ÃÄsalva_dados  0/26  Ram=0
+   ³  ÃÄsalva_dados  0/26  Ram=0
+   ³  ÃÄatualiza_pwm  0/20  Ram=0
+   ³  ÀÄatualiza_pwm  0/20  Ram=0
+   ÀÄtrata_int_tmr0  0/76  Ram=0
+      ÀÄ@DIV1616  (Inline)  Ram=5

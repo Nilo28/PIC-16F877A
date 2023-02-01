@@ -1,0 +1,19 @@
+# MPLAB IDE generated this makefile for use with GNU make.
+# Project: Prática_1__28_07.mcp
+# Date: Thu Aug 11 21:40:34 2022
+
+AS = MPASMWIN.exe
+CC = 
+LD = mplink.exe
+AR = mplib.exe
+RM = rm
+
+Prática_1__28_07.cof : Prática_1__28_07.o
+	$(CC) /p16F877A "Prática_1__28_07.o" /z__MPLAB_BUILD=1 /o"Prática_1__28_07.cof" /M"Prática_1__28_07.map" /W /x
+
+Prática_1__28_07.o : Prática_1__28_07.asm ../../../../../../../Program\ Files\ (x86)/Microchip/MPASM\ Suite/p16f877a.inc
+	$(AS) /q /p16F877A "Prática_1__28_07.asm" /l"Prática_1__28_07.lst" /e"Prática_1__28_07.err"
+
+clean : 
+	$(CC) "Prática_1__28_07.o" "Prática_1__28_07.hex" "Prática_1__28_07.err" "Prática_1__28_07.lst" "Prática_1__28_07.cof"
+

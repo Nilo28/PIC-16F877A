@@ -1,0 +1,14 @@
+[PROJECT]
+Target=Pratica_02__11_08.hex
+Processor_Text=PIC16F877A
+CCSVersion=5.025
+Compiler=PCM
+[Target Data]
+FileList=Pratica_02__11_08.c
+[Pratica_02__11_08.c]
+Type=4
+[mru-list]
+1=Pratica_02__11_08.c
+[Units]
+Count=1
+1=Pratica_02__11_08 (main)

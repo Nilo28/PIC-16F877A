@@ -1,0 +1,5 @@
+*** Error 23 "C:\Program Files (x86)\PICC\devices\16f877a.h" Line 11(8,9): Can not set this option this far into the code
+*** Error 128 "C:\Program Files (x86)\PICC\devices\16f877a.h" Line 11(2,8): A #DEVICE required before this line
+*** Error 48 "C:\Program Files (x86)\PICC\devices\16f877a.h" Line 22(46,47): Expecting a (
+      3 Errors,  0 Warnings.
+Build Failed.

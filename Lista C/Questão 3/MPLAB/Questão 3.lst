@@ -1,0 +1,384 @@
+CCS PCM C Compiler, Version 5.025, 30560               11-mai-22 19:25
+
+               Filename:   C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista C\Questão 3\MPLAB\Questão 3.lst
+
+               ROM used:   250 words (3%)
+                           Largest free fragment is 2048
+               RAM used:   20 (6%) at main() level
+                           23 (6%) worst case
+               Stack used: 1 locations
+               Stack size: 7
+
+*
+0000:  NOP
+0001:  MOVLW  00
+0002:  MOVWF  0A
+0003:  GOTO   04C
+.................... /* 
+.................... Discente: Nilo Rodrigues Alves Filho 
+.................... Questão 3: 
+.................... Altere o programa anterior, utilizando o TIMER0 como contador externo via pino RA4. 
+.................... */ 
+....................  
+.................... #include <16f877a.h> 
+.................... //////////// Standard Header file for the PIC16F877A device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2013 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F877A 
+0004:  BCF    0A.0
+0005:  BCF    0A.1
+0006:  BCF    0A.2
+0007:  ADDWF  02,F
+0008:  RETLW  80
+0009:  RETLW  F2
+000A:  RETLW  49
+000B:  RETLW  61
+000C:  RETLW  32
+000D:  RETLW  25
+000E:  RETLW  04
+000F:  RETLW  F0
+0010:  RETLW  00
+0011:  RETLW  20
+0012:  CLRF   78
+0013:  CLRF   79
+0014:  CLRF   77
+0015:  CLRF   7A
+0016:  MOVF   30,W
+0017:  BTFSS  03.2
+0018:  GOTO   01C
+0019:  MOVF   2F,W
+001A:  BTFSC  03.2
+001B:  GOTO   036
+001C:  MOVLW  10
+001D:  MOVWF  31
+001E:  BCF    03.0
+001F:  RLF    2D,F
+0020:  RLF    2E,F
+0021:  RLF    77,F
+0022:  RLF    7A,F
+0023:  MOVF   30,W
+0024:  SUBWF  7A,W
+0025:  BTFSS  03.2
+0026:  GOTO   029
+0027:  MOVF   2F,W
+0028:  SUBWF  77,W
+0029:  BTFSS  03.0
+002A:  GOTO   032
+002B:  MOVF   2F,W
+002C:  SUBWF  77,F
+002D:  BTFSS  03.0
+002E:  DECF   7A,F
+002F:  MOVF   30,W
+0030:  SUBWF  7A,F
+0031:  BSF    03.0
+0032:  RLF    78,F
+0033:  RLF    79,F
+0034:  DECFSZ 31,F
+0035:  GOTO   01E
+0036:  RETURN
+....................  
+.................... #list 
+....................  
+.................... #include "regs_pic16f877a.h" 
+.................... // DEFS_877  
+.................... //  
+.................... // Standard definitions for PIC16F877  
+.................... //  
+.................... // Copyright, Peter H. Anderson, Baltimore, MD, June, '99  
+....................   
+.................... //#define byte int  
+....................  
+.................... //#byte PORTD = 0x08 
+.................... //#bit INTF = 0xb.1 
+....................  
+.................... #list  
+....................  
+....................  
+....................  
+.................... #define hab_milhar pin_d1 
+.................... #define hab_centena pin_d2 
+.................... #define hab_dezena pin_d3 
+.................... #define hab_unidade pin_d4 
+....................  
+.................... #use fast_io(B) 
+.................... #use fast_io(D) 
+.................... #use delay(clock = 4M) 
+0037:  MOVLW  2D
+0038:  MOVWF  04
+0039:  BCF    03.7
+003A:  MOVF   00,W
+003B:  BTFSC  03.2
+003C:  GOTO   04B
+003D:  MOVLW  01
+003E:  MOVWF  78
+003F:  CLRF   77
+0040:  DECFSZ 77,F
+0041:  GOTO   040
+0042:  DECFSZ 78,F
+0043:  GOTO   03F
+0044:  MOVLW  4A
+0045:  MOVWF  77
+0046:  DECFSZ 77,F
+0047:  GOTO   046
+0048:  GOTO   049
+0049:  DECFSZ 00,F
+004A:  GOTO   03D
+004B:  RETURN
+.................... #bit ponto = PORTD.0 
+....................  
+.................... byte const display [10] = {0x80, 0xF2, 0x49,0x61,0x32,0x25,0x04,0xF0,0x00,0x20}; 
+.................... #define ajustar 6  
+.................... int dp = 0; 
+.................... int var = 0; 
+.................... unsigned int16 cont=0, cont2=0; 
+.................... unsigned int16 aux; 
+....................  
+.................... int mi=0, cen=0, dez=0, un=0; 
+.................... void aciona_display(int algarismo, int posicao); 
+....................  
+.................... void main () { 
+004C:  MOVF   03,W
+004D:  ANDLW  1F
+004E:  MOVWF  03
+004F:  CLRF   20
+0050:  CLRF   21
+0051:  CLRF   23
+0052:  CLRF   22
+0053:  CLRF   25
+0054:  CLRF   24
+0055:  CLRF   28
+0056:  CLRF   29
+0057:  CLRF   2A
+0058:  CLRF   2B
+0059:  BSF    03.5
+005A:  BSF    1F.0
+005B:  BSF    1F.1
+005C:  BSF    1F.2
+005D:  BCF    1F.3
+005E:  MOVLW  07
+005F:  MOVWF  1C
+0060:  BCF    03.7
+0061:  MOVLW  01
+0062:  BCF    03.5
+0063:  MOVWF  2C
+.................... 	 
+.................... 	int posicao =1; 
+.................... 	set_tris_b(0x01); 
+0064:  BSF    03.5
+0065:  MOVWF  06
+.................... 	set_tris_d(0x00); 
+0066:  MOVLW  00
+0067:  MOVWF  08
+.................... 	ext_int_edge(L_TO_H); 
+0068:  BSF    01.6
+.................... 	bit_clear(OPTION_REG,7); 
+0069:  BCF    01.7
+.................... 	setup_timer_0(RTCC_EXT_L_TO_H | RTCC_DIV_1); 
+006A:  MOVF   01,W
+006B:  ANDLW  C7
+006C:  IORLW  28
+006D:  MOVWF  01
+.................... 	set_timer0(0); 
+006E:  BCF    03.5
+006F:  CLRF   01
+.................... 	intf=0; 
+0070:  BCF    0B.1
+.................... 	 
+.................... 	 
+.................... 	while(TRUE){ 
+.................... 		 
+.................... 		if(t0if==1){ 
+0071:  BTFSS  0B.2
+0072:  GOTO   076
+.................... 			cont2++; 
+0073:  INCF   24,F
+0074:  BTFSC  03.2
+0075:  INCF   25,F
+.................... 		}  
+.................... 		cont = 256 * cont2 + get_timer0(); 
+0076:  MOVF   24,W
+0077:  MOVWF  2E
+0078:  CLRF   2D
+0079:  MOVF   01,W
+007A:  ADDWF  2D,W
+007B:  MOVWF  22
+007C:  MOVF   2E,W
+007D:  MOVWF  23
+007E:  BTFSC  03.0
+007F:  INCF   23,F
+.................... 		if(cont>9999){ 
+0080:  MOVF   23,W
+0081:  SUBLW  26
+0082:  BTFSC  03.0
+0083:  GOTO   092
+0084:  XORLW  FF
+0085:  BTFSS  03.2
+0086:  GOTO   08B
+0087:  MOVF   22,W
+0088:  SUBLW  0F
+0089:  BTFSC  03.0
+008A:  GOTO   092
+.................... 			dp++; 
+008B:  INCF   20,F
+.................... 			cont2=0; 
+008C:  CLRF   25
+008D:  CLRF   24
+.................... 		if(dp>4) 
+008E:  MOVF   20,W
+008F:  SUBLW  04
+0090:  BTFSS  03.0
+.................... 			dp=0;           
+0091:  CLRF   20
+.................... 		} 
+.................... 		 
+.................... 		mi= cont / 1000;  
+0092:  MOVF   23,W
+0093:  MOVWF  2E
+0094:  MOVF   22,W
+0095:  MOVWF  2D
+0096:  MOVLW  03
+0097:  MOVWF  30
+0098:  MOVLW  E8
+0099:  MOVWF  2F
+009A:  CALL   012
+009B:  MOVF   78,W
+009C:  MOVWF  28
+.................... 		aux = cont % 1000;    
+009D:  MOVF   23,W
+009E:  MOVWF  2E
+009F:  MOVF   22,W
+00A0:  MOVWF  2D
+00A1:  MOVLW  03
+00A2:  MOVWF  30
+00A3:  MOVLW  E8
+00A4:  MOVWF  2F
+00A5:  CALL   012
+00A6:  MOVF   77,W
+00A7:  MOVWF  26
+00A8:  MOVF   7A,W
+00A9:  MOVWF  27
+.................... 		 
+.................... 		cen = aux / 100;  
+00AA:  MOVF   27,W
+00AB:  MOVWF  2E
+00AC:  MOVF   26,W
+00AD:  MOVWF  2D
+00AE:  CLRF   30
+00AF:  MOVLW  64
+00B0:  MOVWF  2F
+00B1:  CALL   012
+00B2:  MOVF   78,W
+00B3:  MOVWF  29
+.................... 		aux = aux % 100;  
+00B4:  MOVF   27,W
+00B5:  MOVWF  2E
+00B6:  MOVF   26,W
+00B7:  MOVWF  2D
+00B8:  CLRF   30
+00B9:  MOVLW  64
+00BA:  MOVWF  2F
+00BB:  CALL   012
+00BC:  MOVF   77,W
+00BD:  MOVWF  26
+00BE:  MOVF   7A,W
+00BF:  MOVWF  27
+.................... 		 
+.................... 		dez = aux / 10;   
+00C0:  MOVF   27,W
+00C1:  MOVWF  2E
+00C2:  MOVF   26,W
+00C3:  MOVWF  2D
+00C4:  CLRF   30
+00C5:  MOVLW  0A
+00C6:  MOVWF  2F
+00C7:  CALL   012
+00C8:  MOVF   78,W
+00C9:  MOVWF  2A
+.................... 		un = aux % 10; 
+00CA:  MOVF   27,W
+00CB:  MOVWF  2E
+00CC:  MOVF   26,W
+00CD:  MOVWF  2D
+00CE:  CLRF   30
+00CF:  MOVLW  0A
+00D0:  MOVWF  2F
+00D1:  CALL   012
+00D2:  MOVF   77,W
+00D3:  MOVWF  2B
+.................... 		 
+.................... 		 
+.................... 		output_b(display[mi]); 
+00D4:  MOVF   28,W
+00D5:  CALL   004
+00D6:  MOVWF  2D
+00D7:  MOVWF  06
+.................... 		output_high(hab_milhar); 
+00D8:  BSF    08.1
+.................... 		delay_ms(ajustar); 
+00D9:  MOVLW  06
+00DA:  MOVWF  2D
+00DB:  CALL   037
+.................... 		output_low(hab_milhar); 
+00DC:  BCF    08.1
+.................... 		 
+.................... 		output_b(display[cen]); 
+00DD:  MOVF   29,W
+00DE:  CALL   004
+00DF:  MOVWF  2D
+00E0:  MOVWF  06
+.................... 		output_high(hab_centena); 
+00E1:  BSF    08.2
+.................... 		delay_ms(ajustar); 
+00E2:  MOVLW  06
+00E3:  MOVWF  2D
+00E4:  CALL   037
+.................... 		output_low(hab_centena); 
+00E5:  BCF    08.2
+.................... 		 
+.................... 		 
+.................... 		output_b(display[dez]); 
+00E6:  MOVF   2A,W
+00E7:  CALL   004
+00E8:  MOVWF  2D
+00E9:  MOVWF  06
+.................... 		output_high(hab_dezena); 
+00EA:  BSF    08.3
+.................... 		delay_ms(ajustar); 
+00EB:  MOVLW  06
+00EC:  MOVWF  2D
+00ED:  CALL   037
+.................... 		output_low(hab_dezena); 
+00EE:  BCF    08.3
+.................... 		 
+.................... 		 
+.................... 		output_b(display[un]); 
+00EF:  MOVF   2B,W
+00F0:  CALL   004
+00F1:  MOVWF  2D
+00F2:  MOVWF  06
+.................... 		output_high(hab_unidade); 
+00F3:  BSF    08.4
+.................... 		delay_ms(ajustar); 
+00F4:  MOVLW  06
+00F5:  MOVWF  2D
+00F6:  CALL   037
+.................... 		output_low(hab_unidade); 
+00F7:  BCF    08.4
+00F8:  GOTO   071
+.................... 		 
+.................... 	} 
+.................... } 
+....................  
+00F9:  GOTO   0F9
+
+Configuration Fuses:
+   Word  1: 373B   RC NOWDT NOPUT NOBROWNOUT NOLVP NOCPD NOWRT DEBUG NOPROTECT
+
+   Some fuses have been forced to be compatible with the ICD debugger.

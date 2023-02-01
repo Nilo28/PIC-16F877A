@@ -1,0 +1,14 @@
+[PROJECT]
+Target=Atividade 13.04 - CCP2.hex
+Processor_Text=PIC16F877A
+CCSVersion=5.025
+Compiler=PCM
+[Target Data]
+FileList=Atividade 13.04 - CCP2.c
+[Atividade 13.04 - CCP2.c]
+Type=4
+[mru-list]
+1=Atividade 13.04 - CCP2.c
+[Units]
+Count=1
+1=Atividade 13.04 - CCP2 (main)

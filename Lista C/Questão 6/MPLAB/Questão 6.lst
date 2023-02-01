@@ -1,0 +1,287 @@
+CCS PCM C Compiler, Version 5.025, 30560               11-mai-22 19:27
+
+               Filename:   C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista C\Questão 6\MPLAB\Questão 6.lst
+
+               ROM used:   153 words (2%)
+                           Largest free fragment is 2048
+               RAM used:   17 (5%) at main() level
+                           20 (6%) worst case
+               Stack used: 0 locations
+               Stack size: 7
+
+*
+0000:  NOP
+0001:  MOVLW  00
+0002:  MOVWF  0A
+0003:  GOTO   068
+.................... /* 
+.................... Discente: Nilo Rodrigues Alves Filho 
+.................... Questão 6: 
+.................... Utilizando o TIMER0, faça um programa para ler o estado do pino RD7 a cada 26 us durante 10 vezes.  
+.................... A primeira leitura estará armazenada numa flag (Ex: #bit flag1 = 0x20.0).  
+.................... A segunda leitura estará no bit menos significativo de uma variável de 8 bits,  
+.................... enquanto que a terceira leitura estará no segundo bit menos significativo e assim seguindo essa lógica até o oitavo bit mais significativo da variável (Sugestão: Utilize o comando >> da linguagem C).  
+.................... A décima leitura do pino estará em uma outra flag (Ex: #bit flag10 = 0x20.1).  
+.................... Essas 10 leituras serão sempre realizadas após o pino RD7 estiver em nível alto durante 50 ms.  
+....................  
+.................... */ 
+....................  
+....................  
+.................... #include <16f877a.h> 
+.................... //////////// Standard Header file for the PIC16F877A device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2013 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F877A 
+....................  
+.................... #list 
+....................  
+.................... #include "regs_pic16f877a.h" 
+.................... // DEFS_877  
+.................... //  
+.................... // Standard definitions for PIC16F877  
+.................... //  
+.................... // Copyright, Peter H. Anderson, Baltimore, MD, June, '99  
+....................   
+.................... //#define byte int  
+....................  
+.................... //#byte PORTD = 0x08 
+.................... //#bit INTF = 0xb.1 
+....................  
+.................... #list  
+....................  
+....................  
+....................  
+....................  
+.................... int flag10 = 0b00000001; 
+.................... int flag1 = 0b00000001; 
+.................... int aux2 = 0b00000001; 
+.................... int aux = 0b00000001;            
+.................... int varprincipal = 0b00000000;     
+.................... int varbitdeslc, bit_lido;  
+.................... int cont1 = 0;            
+.................... int cont2 = 7;          
+.................... int x = 0b00000000;      
+....................  
+.................... void var_byte(){    
+.................... 	bit_lido = 0b00000000; 
+*
+0020:  CLRF   26
+.................... 	int estado_pino = input(PIN_D7); 
+0021:  BSF    03.5
+0022:  BSF    08.7
+.................... 	 
+.................... 	aux2 = (estado_pino  & 1); 
+*
+0027:  MOVF   2D,W
+0028:  ANDLW  01
+0029:  MOVWF  22
+.................... 	varbitdeslc = aux<<cont1; 
+002A:  MOVF   23,W
+002B:  MOVWF  25
+002C:  MOVF   27,W
+002D:  MOVWF  78
+002E:  BTFSC  03.2
+002F:  GOTO   034
+0030:  BCF    03.0
+0031:  RLF    25,F
+0032:  DECFSZ 78,F
+0033:  GOTO   030
+.................... 	 
+.................... 	int bit_deslc = (x >> cont2); 
+0034:  MOVF   29,W
+0035:  MOVWF  2E
+0036:  MOVF   28,W
+0037:  MOVWF  78
+0038:  BTFSC  03.2
+0039:  GOTO   03E
+003A:  BCF    03.0
+003B:  RRF    2E,F
+003C:  DECFSZ 78,F
+003D:  GOTO   03A
+.................... 	 
+.................... 	varbitdeslc = (varbitdeslc ^ bit_deslc); 
+003E:  MOVF   2E,W
+003F:  XORWF  25,F
+.................... 	varprincipal += varbitdeslc;    
+0040:  MOVF   25,W
+0041:  ADDWF  24,F
+.................... 	cont1++; 
+0042:  INCF   27,F
+.................... 	cont2--; 
+0043:  DECF   28,F
+.................... 	 
+.................... 	if(cont1==8){ 
+0044:  MOVF   27,W
+0045:  SUBLW  08
+0046:  BTFSS  03.2
+0047:  GOTO   04E
+.................... 		bit_lido = ~varprincipal; 
+0048:  MOVF   24,W
+0049:  MOVWF  26
+004A:  COMF   26,F
+.................... 		varbitdeslc = aux; 
+004B:  MOVF   23,W
+004C:  MOVWF  25
+.................... 		varprincipal = 0; 
+004D:  CLRF   24
+.................... 	} 
+.................... } 
+.................... void leitura(contleitura){ 
+.................... 	OPTION_REG = 0X88; 
+*
+0004:  MOVLW  88
+0005:  BSF    03.5
+0006:  MOVWF  01
+.................... 	TMR0 = 230; 
+0007:  MOVLW  E6
+0008:  BCF    03.5
+0009:  MOVWF  01
+.................... 	t0if = 0; 
+000A:  BCF    0B.2
+.................... 	 
+.................... 	while(1) { 
+.................... 		if(t0if == 1){ 
+000B:  BTFSS  0B.2
+000C:  GOTO   064
+.................... 			if(contleitura==0){ 
+000D:  MOVF   2C,F
+000E:  BTFSC  03.2
+.................... 				break; 
+000F:  GOTO   065
+.................... 			} 
+.................... 			if(contleitura == 1){ 
+0010:  DECFSZ 2C,W
+0011:  GOTO   018
+.................... 				flag1 = input(PIN_D7); 
+0012:  BSF    03.5
+0013:  BSF    08.7
+0014:  BCF    03.5
+0015:  CLRF   21
+0016:  BTFSC  08.7
+0017:  INCF   21,F
+.................... 			} 
+.................... 			if(contleitura >= 2 && contleitura <=9){ 
+0018:  MOVF   2C,W
+0019:  SUBLW  01
+001A:  BTFSC  03.0
+001B:  GOTO   04E
+001C:  MOVF   2C,W
+001D:  SUBLW  09
+001E:  BTFSS  03.0
+001F:  GOTO   04E
+.................... 				var_byte(); 
+.................... 			} 
+.................... 			if(contleitura == 10){    
+*
+004E:  MOVF   2C,W
+004F:  SUBLW  0A
+0050:  BTFSS  03.2
+0051:  GOTO   058
+.................... 				flag10 = input(PIN_D7);  
+0052:  BSF    03.5
+0053:  BSF    08.7
+0054:  BCF    03.5
+0055:  CLRF   20
+0056:  BTFSC  08.7
+0057:  INCF   20,F
+.................... 			} 
+.................... 			contleitura = contleitura>10?0:contleitura+1; 
+0058:  MOVF   2C,W
+0059:  SUBLW  0A
+005A:  BTFSC  03.0
+005B:  GOTO   05E
+005C:  MOVLW  00
+005D:  GOTO   060
+005E:  MOVLW  01
+005F:  ADDWF  2C,W
+0060:  MOVWF  2C
+.................... 			t0if = 0; 
+0061:  BCF    0B.2
+.................... 			TMR0 = 230; 
+0062:  MOVLW  E6
+0063:  MOVWF  01
+.................... 		}             
+0064:  GOTO   00B
+.................... 	}       
+0065:  BCF    0A.3
+0066:  BCF    0A.4
+0067:  GOTO   094 (RETURN)
+.................... } 
+....................  
+.................... void main(){ 
+0068:  MOVF   03,W
+0069:  ANDLW  1F
+006A:  MOVWF  03
+006B:  MOVLW  01
+006C:  MOVWF  20
+006D:  MOVWF  21
+006E:  MOVWF  22
+006F:  MOVWF  23
+0070:  CLRF   24
+0071:  CLRF   27
+0072:  MOVLW  07
+0073:  MOVWF  28
+0074:  CLRF   29
+0075:  BSF    03.5
+0076:  BSF    1F.0
+0077:  BSF    1F.1
+0078:  BSF    1F.2
+0079:  BCF    1F.3
+007A:  MOVWF  1C
+007B:  BCF    03.7
+007C:  MOVLW  01
+007D:  BCF    03.5
+007E:  MOVWF  2A
+....................  
+.................... 	int contleitura = 1; 
+.................... 	OPTION_REG    = 0x87; 
+007F:  MOVLW  87
+0080:  BSF    03.5
+0081:  MOVWF  01
+.................... 	TMR0       = 61; 
+0082:  MOVLW  3D
+0083:  BCF    03.5
+0084:  MOVWF  01
+.................... 	INTCON    = 0xA0; 
+0085:  MOVLW  A0
+0086:  MOVWF  0B
+.................... 	 
+.................... 	while(1){    
+.................... 		if (t0if == 1){ 
+0087:  BTFSS  0B.2
+0088:  GOTO   097
+.................... 			int botao = input(PIN_D7); 
+0089:  BSF    03.5
+008A:  BSF    08.7
+.................... 			if(botao == 1){    
+*
+008F:  DECFSZ 2B,W
+0090:  GOTO   094
+.................... 				leitura(contleitura); 
+0091:  MOVF   2A,W
+0092:  MOVWF  2C
+0093:  GOTO   004
+.................... 			} 
+.................... 			t0if = 0; 
+0094:  BCF    0B.2
+.................... 			TMR0 = 61; 
+0095:  MOVLW  3D
+0096:  MOVWF  01
+.................... 		}  
+0097:  GOTO   087
+.................... 	} 
+.................... } 
+....................  
+0098:  GOTO   098
+
+Configuration Fuses:
+   Word  1: 373B   RC NOWDT NOPUT NOBROWNOUT NOLVP NOCPD NOWRT DEBUG NOPROTECT
+
+   Some fuses have been forced to be compatible with the ICD debugger.

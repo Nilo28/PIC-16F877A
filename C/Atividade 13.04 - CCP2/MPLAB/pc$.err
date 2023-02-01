@@ -1,0 +1,4 @@
+>>> Warning 203 "Atividade 13.04 - CCP2.c" Line 36(1,1): Condition always TRUE
+*** Error 79 "Atividade 13.04 - CCP2.c" Line 58(1,2): Expect }
+      1 Errors,  1 Warnings.
+Build Failed.

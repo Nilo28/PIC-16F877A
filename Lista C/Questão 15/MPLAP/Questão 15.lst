@@ -1,0 +1,180 @@
+CCS PCM C Compiler, Version 5.025, 30560               11-mai-22 19:32
+
+               Filename:   C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista C\Questão 15\MPLAP\Questão 15.lst
+
+               ROM used:   98 words (1%)
+                           Largest free fragment is 2048
+               RAM used:   16 (4%) at main() level
+                           16 (4%) worst case
+               Stack used: 0 locations
+               Stack size: 7
+
+*
+0000:  NOP
+0001:  MOVLW  00
+0002:  MOVWF  0A
+0003:  GOTO   004
+.................... /* 
+.................... Discente: Nilo Rodrigues Alves Filho 
+.................... Questão 15: 
+.................... Escreva um programa generalizado capaz de medir o período de um sinal, podendo este possuir qualquer valor de período entre 100 us e 50000 us.  
+.................... O período deste sinal será armazenado sempre em uma variável do programa. 
+.................... */ 
+....................  
+.................... #include <16f877a.h> 
+.................... //////////// Standard Header file for the PIC16F877A device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2013 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F877A 
+....................  
+.................... #list 
+....................  
+.................... #include<regs_pic16f877a.h> 
+.................... // DEFS_877  
+.................... //  
+.................... // Standard definitions for PIC16F877  
+.................... //  
+.................... // Copyright, Peter H. Anderson, Baltimore, MD, June, '99  
+....................   
+.................... //#define byte int  
+....................  
+.................... //#byte PORTD = 0x08 
+.................... //#bit INTF = 0xb.1 
+....................  
+.................... #list  
+....................  
+....................  
+....................  
+.................... void main(){ unsigned int16 Tempo1, Tempo2, Periodo, cont; 
+0004:  MOVF   03,W
+0005:  ANDLW  1F
+0006:  MOVWF  03
+0007:  MOVLW  FF
+0008:  MOVWF  20
+0009:  BSF    03.5
+000A:  BSF    1F.0
+000B:  BSF    1F.1
+000C:  BSF    1F.2
+000D:  BCF    1F.3
+000E:  MOVLW  07
+000F:  MOVWF  1C
+0010:  BCF    03.7
+0011:  MOVLW  01
+0012:  BCF    03.5
+0013:  MOVWF  29
+.................... 	int Captura1 = 1; 
+....................     
+....................  
+....................   	setup_timer_1(T1_EXTERNAL_SYNC | T1_DIV_BY_1); 
+0014:  MOVLW  83
+0015:  MOVWF  10
+....................    	setup_ccp1(CCP_CAPTURE_RE); 
+0016:  BSF    20.2
+0017:  MOVF   20,W
+0018:  BSF    03.5
+0019:  MOVWF  07
+001A:  BCF    03.5
+001B:  CLRF   17
+001C:  MOVLW  05
+001D:  MOVWF  17
+....................    	set_timer1(0); 
+001E:  CLRF   0E
+001F:  CLRF   0F
+0020:  CLRF   0E
+....................    	set_tris_C(0b00000100); 
+0021:  MOVLW  04
+0022:  BSF    03.5
+0023:  MOVWF  07
+0024:  BCF    03.5
+0025:  MOVWF  20
+....................  
+....................    	while(1){ 
+.................... 		if(ccp1if == 1){ 
+0026:  BTFSS  0C.2
+0027:  GOTO   060
+....................         	if(Captura1 == 1){ 
+0028:  DECFSZ 29,W
+0029:  GOTO   037
+....................             	Tempo1 = CCP_1; 
+002A:  MOVF   16,W
+002B:  MOVWF  22
+002C:  MOVF   15,W
+002D:  MOVWF  21
+....................             	setup_ccp1(CCP_CAPTURE_FE); 
+002E:  BSF    20.2
+002F:  MOVF   20,W
+0030:  BSF    03.5
+0031:  MOVWF  07
+0032:  BCF    03.5
+0033:  CLRF   17
+0034:  MOVLW  04
+0035:  MOVWF  17
+....................          	} 
+0036:  GOTO   048
+....................          	else{ 
+....................             	Tempo2 = CCP_1 - Tempo1; 
+0037:  MOVF   21,W
+0038:  SUBWF  15,W
+0039:  MOVWF  23
+003A:  MOVF   16,W
+003B:  MOVWF  24
+003C:  MOVF   22,W
+003D:  BTFSS  03.0
+003E:  INCFSZ 22,W
+003F:  SUBWF  24,F
+....................             	setup_ccp1(CCP_CAPTURE_RE);    
+0040:  BSF    20.2
+0041:  MOVF   20,W
+0042:  BSF    03.5
+0043:  MOVWF  07
+0044:  BCF    03.5
+0045:  CLRF   17
+0046:  MOVLW  05
+0047:  MOVWF  17
+....................          	}   
+....................          	ccp1if = 0; 
+0048:  BCF    0C.2
+....................          	Captura1 = Captura1 ^ 1; 
+0049:  MOVLW  01
+004A:  XORWF  29,F
+....................          	if(Tempo2 >= 100 && Tempo2 <= 5000){ 
+004B:  MOVF   24,F
+004C:  BTFSS  03.2
+004D:  GOTO   052
+004E:  MOVF   23,W
+004F:  SUBLW  63
+0050:  BTFSC  03.0
+0051:  GOTO   060
+0052:  MOVF   24,W
+0053:  SUBLW  13
+0054:  BTFSS  03.0
+0055:  GOTO   060
+0056:  BTFSS  03.2
+0057:  GOTO   05C
+0058:  MOVF   23,W
+0059:  SUBLW  88
+005A:  BTFSS  03.0
+005B:  GOTO   060
+....................             	Periodo = Tempo2; 
+005C:  MOVF   24,W
+005D:  MOVWF  26
+005E:  MOVF   23,W
+005F:  MOVWF  25
+....................          	}    
+....................       	} 
+0060:  GOTO   026
+.................... 	} 
+.................... } 
+0061:  GOTO   061
+
+Configuration Fuses:
+   Word  1: 373B   RC NOWDT NOPUT NOBROWNOUT NOLVP NOCPD NOWRT DEBUG NOPROTECT
+
+   Some fuses have been forced to be compatible with the ICD debugger.

@@ -1,0 +1,14 @@
+[PROJECT]
+Target=Atividade 08.04 - Timer0.hex
+Processor_Text=PIC16F877A
+CCSVersion=5.025
+Compiler=PCM
+[Target Data]
+FileList=Atividade 08.04 - Timer0.c
+[Atividade 08.04 - Timer0.c]
+Type=4
+[mru-list]
+1=Atividade 08.04 - Timer0.c
+[Units]
+Count=1
+1=Atividade 08.04 - Timer0 (main)

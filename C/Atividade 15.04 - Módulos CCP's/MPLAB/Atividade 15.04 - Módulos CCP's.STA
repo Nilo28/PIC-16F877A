@@ -1,0 +1,48 @@
+
+ROM used:   78/7936 (1%)
+            78/7936 (1%) including unused fragments
+
+            0.1 Average locations per line
+            2.0 Average locations per statement
+
+RAM used:   7/357 (2%) at main() level
+            7/357 (2%) worst case
+
+Stack used: 0 worst case (0 in main + 0 for interrupts)
+Stack size: 7
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+   75    39 100  Atividade 15.04 - Módulos CCP's.c
+  672     0   0  ..\..\..\..\..\..\..\..\..\..\..\Program Files (x86)\PICC\devices\16F877A.h
+  399     0   0  regs_pic16f877a.h
+----- -----
+ 1146    39 Total
+
+Page ROM  %  RAM    Vol Diff  Functions:
+---- --- --- ---    --- ----  ----------
+0     74  95    0    933  5.3  main
+ Inline         0             @cinit1
+
+Program metrics:
+    Functions               1
+    Statements              39
+    Comments                230
+    Volume (V)              936
+    Difficulty (D)          5.3
+    Effort to implement (E) 4922
+    Time to implement (T)   5 minutes
+    Est Delivered Bugs (B)  0
+    Cyclomatic Complexity   5
+    Maintainability (MI)    25
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00003     4  0  
+00004-007FF    74  1970  
+00800-00FFF     0  2048  
+01000-017FF     0  2048  
+01800-01EFF     0  1792  
+
+
+

@@ -1,0 +1,151 @@
+CCS PCM C Compiler, Version 5.025, 30560               11-mai-22 19:27
+
+               Filename:   C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista C\Questão 5\MPLAB\Questão 5.lst
+
+               ROM used:   62 words (1%)
+                           Largest free fragment is 2048
+               RAM used:   7 (2%) at main() level
+                           7 (2%) worst case
+               Stack used: 0 locations
+               Stack size: 7
+
+*
+0000:  NOP
+0001:  MOVLW  00
+0002:  MOVWF  0A
+0003:  GOTO   012
+.................... /* 
+.................... Discente: Nilo Rodrigues Alves Filho  
+.................... Questão 5: 
+.................... Utilizando o TIMER0 como temporizador com clock interno, faça um programa para verificar constantemente se o pino RD7, configurado como entrada, se mantém em nível alto em pelo menos 50 ms.  
+.................... Caso afirmativo, o estado do RD6 é colocado em nível alto, caso contrário, o seu estado é baixo.  
+.................... */ 
+....................  
+....................  
+.................... #include <16f877a.h> 
+.................... //////////// Standard Header file for the PIC16F877A device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2013 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F877A 
+....................  
+.................... #list 
+....................  
+.................... #include "regs_pic16f877a.h"       
+.................... // DEFS_877  
+.................... //  
+.................... // Standard definitions for PIC16F877  
+.................... //  
+.................... // Copyright, Peter H. Anderson, Baltimore, MD, June, '99  
+....................   
+.................... //#define byte int  
+....................  
+.................... //#byte PORTD = 0x08 
+.................... //#bit INTF = 0xb.1 
+....................  
+.................... #list  
+....................  
+....................  
+....................  
+.................... int c1 = 0; 
+.................... 	 
+.................... void InitTimer0(){ 
+.................... 	setup_timer_0(RTCC_INTERNAL | RTCC_DIV_1); 
+0004:  BSF    03.5
+0005:  MOVF   01,W
+0006:  ANDLW  C7
+0007:  IORLW  08
+0008:  MOVWF  01
+.................... 	set_timer0(0); 
+0009:  BCF    03.5
+000A:  CLRF   01
+.................... 	output_high(pin_d6); 
+000B:  BSF    03.5
+000C:  BCF    08.6
+000D:  BCF    03.5
+000E:  BSF    08.6
+000F:  BCF    0A.3
+0010:  BCF    0A.4
+0011:  GOTO   022 (RETURN)
+.................... 	}   
+.................... void main(){ 
+0012:  MOVF   03,W
+0013:  ANDLW  1F
+0014:  MOVWF  03
+0015:  CLRF   20
+0016:  BSF    03.5
+0017:  BSF    1F.0
+0018:  BSF    1F.1
+0019:  BSF    1F.2
+001A:  BCF    1F.3
+001B:  MOVLW  07
+001C:  MOVWF  1C
+001D:  BCF    03.7
+.................... 	enable_interrupts(GLOBAL | INT_TIMER0); 
+001E:  MOVLW  E0
+001F:  BCF    03.5
+0020:  IORWF  0B,F
+.................... 	InitTimer0(); 
+0021:  GOTO   004
+.................... 	 
+.................... 	set_tris_d(0x80); 
+0022:  MOVLW  80
+0023:  BSF    03.5
+0024:  MOVWF  08
+.................... 	ext_int_edge(H_TO_L); 
+0025:  BCF    01.6
+.................... 	 
+.................... 	while(1){ 
+.................... 		if(portd7 == 1 && c1 == 0){ 
+0026:  BCF    03.5
+0027:  BTFSS  08.7
+0028:  GOTO   030
+0029:  MOVF   20,F
+002A:  BTFSS  03.2
+002B:  GOTO   030
+.................... 			TMR0 = 0; 
+002C:  CLRF   01
+.................... 			c1 = 1; 
+002D:  MOVLW  01
+002E:  MOVWF  20
+.................... 		} 
+002F:  GOTO   035
+.................... 		else if (portd7 == 0 && c1 == 1){ 
+0030:  BTFSC  08.7
+0031:  GOTO   035
+0032:  DECFSZ 20,W
+0033:  GOTO   035
+.................... 			c1 = 0; 
+0034:  CLRF   20
+.................... 		} 
+.................... 		 
+.................... 		if(TMR0 >= 50){ 
+0035:  MOVF   01,W
+0036:  SUBLW  31
+0037:  BTFSC  03.0
+0038:  GOTO   03B
+.................... 			portd6 = 1; 
+0039:  BSF    08.6
+.................... 		} 
+003A:  GOTO   03C
+.................... 		else{ 
+.................... 			portd6 = 0; 
+003B:  BCF    08.6
+.................... 		} 
+003C:  GOTO   027
+.................... 		 
+.................... 	} 
+....................  
+.................... }  
+003D:  GOTO   03D
+
+Configuration Fuses:
+   Word  1: 373B   RC NOWDT NOPUT NOBROWNOUT NOLVP NOCPD NOWRT DEBUG NOPROTECT
+
+   Some fuses have been forced to be compatible with the ICD debugger.

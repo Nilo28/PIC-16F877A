@@ -1,0 +1,161 @@
+CCS PCM C Compiler, Version 5.025, 30560               11-set-22 22:40
+
+               Filename:   C:\Users\nilof\OneDrive\Documentos\UFPI\3° Período\Arquitetura de Sistemas\Lista C\Questão 10\MPLAB\Questão 10.lst
+
+               ROM used:   84 words (1%)
+                           Largest free fragment is 2048
+               RAM used:   13 (4%) at main() level
+                           13 (4%) worst case
+               Stack used: 0 locations
+               Stack size: 7
+
+*
+0000:  NOP
+0001:  MOVLW  00
+0002:  MOVWF  0A
+0003:  GOTO   031
+0004:  MOVWF  7F
+0005:  SWAPF  03,W
+0006:  CLRF   03
+0007:  MOVWF  21
+0008:  MOVF   0A,W
+0009:  MOVWF  20
+000A:  CLRF   0A
+000B:  MOVF   04,W
+000C:  MOVWF  22
+000D:  MOVF   77,W
+000E:  MOVWF  23
+000F:  MOVF   78,W
+0010:  MOVWF  24
+0011:  MOVF   79,W
+0012:  MOVWF  25
+0013:  MOVF   7A,W
+0014:  MOVWF  26
+0015:  BCF    03.7
+0016:  BCF    03.5
+0017:  MOVLW  8C
+0018:  MOVWF  04
+0019:  BTFSS  00.1
+001A:  GOTO   01D
+001B:  BTFSC  0C.1
+001C:  GOTO   02E
+001D:  MOVF   22,W
+001E:  MOVWF  04
+001F:  MOVF   23,W
+0020:  MOVWF  77
+0021:  MOVF   24,W
+0022:  MOVWF  78
+0023:  MOVF   25,W
+0024:  MOVWF  79
+0025:  MOVF   26,W
+0026:  MOVWF  7A
+0027:  MOVF   20,W
+0028:  MOVWF  0A
+0029:  SWAPF  21,W
+002A:  MOVWF  03
+002B:  SWAPF  7F,F
+002C:  SWAPF  7F,W
+002D:  RETFIE
+002E:  BCF    0A.3
+002F:  BCF    0A.4
+0030:  GOTO   031
+.................... /* 
+.................... Discente: Nilo Rodrigues Alves Filho 
+.................... Questão 10: 
+.................... Utilizando a interrupção do TIMER2, faça um programa para comutar o estado do pino RD7 a cada 800 us.  
+.................... */ 
+....................  
+.................... #include <16f877a.h> 
+.................... //////////// Standard Header file for the PIC16F877A device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2013 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F877A 
+....................  
+.................... #list 
+....................  
+.................... #include<regs_pic16f877a.h>  
+.................... // DEFS_877  
+.................... //  
+.................... // Standard definitions for PIC16F877  
+.................... //  
+.................... // Copyright, Peter H. Anderson, Baltimore, MD, June, '99  
+....................   
+.................... //#define byte int  
+....................  
+.................... //#byte PORTD = 0x08 
+.................... //#bit INTF = 0xb.1 
+....................  
+.................... #list  
+....................  
+....................  
+....................  
+.................... #use fast_io(B) 
+.................... #use fast_io(D) 
+.................... #use delay(clock = 4M)  
+.................... #int_timer2 
+....................  
+.................... void main () { 
+0031:  MOVF   03,W
+0032:  ANDLW  1F
+0033:  MOVWF  03
+0034:  BSF    03.5
+0035:  BSF    1F.0
+0036:  BSF    1F.1
+0037:  BSF    1F.2
+0038:  BCF    1F.3
+0039:  MOVLW  07
+003A:  MOVWF  1C
+003B:  BCF    03.7
+....................  
+.................... 	enable_interrupts(GLOBAL | INT_TIMER2);// 
+003C:  MOVLW  C2
+003D:  IORWF  0F,F
+.................... 	tmr2ie  = 1; 
+003E:  BSF    0C.1
+.................... 	INTCON  = 0xC0; 
+003F:  MOVLW  C0
+0040:  BCF    03.5
+0041:  MOVWF  0B
+.................... 	setup_timer_2(T2_DIV_BY_1, 199, 4); 
+0042:  MOVLW  18
+0043:  MOVWF  78
+0044:  IORLW  04
+0045:  MOVWF  12
+0046:  MOVLW  C7
+0047:  BSF    03.5
+0048:  MOVWF  12
+.................... 	set_tris_b(0b00000000);       
+0049:  MOVLW  00
+004A:  MOVWF  06
+.................... 	bit_clear(OPTION_REG,7); 
+004B:  BCF    01.7
+.................... 	 
+.................... 	while(TRUE){ 
+.................... 		if (tmr2if){  
+004C:  BCF    03.5
+004D:  BTFSS  0C.1
+004E:  GOTO   052
+.................... 			tmr2if = 0; 
+004F:  BCF    0C.1
+.................... 			output_toggle(pin_d7); 
+0050:  MOVLW  80
+0051:  XORWF  08,F
+.................... 		} 
+0052:  GOTO   04D
+.................... 	} 
+.................... } 
+....................     
+0053:  GOTO   053
+....................  
+
+Configuration Fuses:
+   Word  1: 373B   RC NOWDT NOPUT NOBROWNOUT NOLVP NOCPD NOWRT DEBUG NOPROTECT
+
+   Some fuses have been forced to be compatible with the ICD debugger.

@@ -1,0 +1,5 @@
+>>> Warning 203 "Questão 15.c" Line 20(1,1): Condition always TRUE
+>>> Warning 202 "Questão 15.c" Line 11(54,58): Variable never used:   cont
+      Memory usage:   ROM=1%      RAM=4% - 4%
+      0 Errors,  2 Warnings.
+Build Successful.
